@@ -1,0 +1,6 @@
+# d3 npm
+https://www.npmjs.com/package/d3
+https://github.com/d3/d3/wiki
+
+#useful for checking browsers
+https://caniuse.com
