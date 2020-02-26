@@ -1,0 +1,30 @@
+/*
+             * set size of our svg element canvas
+             */
+             svg
+             {
+                 width: 500px;
+                 height: 500px;
+                 border: 3px solid green;
+                 transform-origin: 0 0;
+             }
+ 
+             /*
+              * group styles only show if no fill 
+              * from child elements, these apply
+              * to the parent elements/containers
+              */
+             g.rectangleClass
+             {
+                 border: 3px solid red;
+             }
+ 
+             g.circlesClass
+             {
+                 border: 3px solid blue;
+             }
+
+             g.TextpartsClass
+             {
+                 border: 3px solid green;
+             }

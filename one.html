@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <!--
+            D3 Data Driven Documents - minified base library
+        -->
+        <script src="node_modules/d3/dist/d3.min.js"></script>
+        
+        <!--
+            my d3 functions
+        -->
+        <script src="scripts/test.js"></script>
+
+        <!--
+            my css styles
+        -->
+        <link rel="stylesheet" href="styles/test.css" />
+    </head>
+    <body>
+        <script>
+
+            /*
+             * use the <body> element
+             * add a new <svg> scalable vector graphics element
+            */
+              var svg = d3.select("body")
+                          .append("svg")
+
+                          // scale, e.g. zoom
+                          .attr("transform", "scale(4)")
+
+            /*
+             * add groups for elements
+             * MUST be called 'g'
+             */
+                var gRect = svg.append("g");
+                    gRect.attr("class", "rectangleClass");
+
+                var gCirc = svg.append("g");
+                    gCirc.attr("class", "circlesClass");
+
+                var gText = svg.append("g");
+                    gText.attr("class", "TextpartsClass");
+
+            /*
+             * data array
+             */
+             var data = [8,4,6,2];
+             var dataX = 50, dataY = 100;
+
+             // circles
+                 data.forEach(
+                        x => drawCircle(gCirc, x, "red", dataX+(x*8), dataY)
+                    );
+
+            // proportional circles
+            dataY+=40;
+            data.forEach(
+                        x => drawProportionalCircle(gCirc, x, "blue", dataX+(x*8), dataY)
+                    );
+
+            // rectangles
+            dataY+=40;
+            data.forEach(
+                        x => drawRectangle(gRect, "yellow", x, 10, dataX+(x*8), dataY)
+                    );
+
+            // text
+            dataY+=40;
+            data.forEach(
+                        x => drawText(gText, x, "3px", dataX+(x*8), dataY)
+                    );
+           
+        </script>
+    </body>
+</html>
