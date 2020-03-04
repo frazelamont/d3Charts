@@ -109,10 +109,10 @@
              * emphasize values
              * - here 1.5 means higher values have more space
              *   lower values are more scrunched up
-             * - change to 1 to have same gaps from slightly higher values
+             * - change to 1 to have same gaps for all values
              * - change to .5 to emphasize lower values and scrunch up higher values
              */
-            .exponent(1.5)
+            .exponent(1)
             ;
 
             // DEBUG
@@ -203,6 +203,14 @@
             ;
 
         yAxis(yAxisGroup);
+
+        /*
+         * get the max value form our core data column
+         * which is used to set the Y axis values, then
+         * use this to set the gridlines tick setting (spaces)
+         */
+        var max = d3.max(data.map(d => d.value));
+        drawGridlines(dataGroup, max);
 
         /*
          * now show the legend, using data fields excluding date

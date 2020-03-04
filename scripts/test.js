@@ -47,25 +47,23 @@ function drawProportionalCircle(group, radius, colour, xAxis, yAxis) {
  * - yAxis (int)
  */
 function drawRectangle(group, colour, height, width, xAxis, yAxis, stroke, title) {
-  var x = 
-  group
-    .append("rect")
-    .attr("fill", colour)
-    .attr("width", width)
-    .attr("height", height)
-    .attr("x", xAxis)
-    .attr("y", yAxis)
+  var x =
+    group
+      .append("rect")
+      .attr("fill", colour)
+      .attr("width", width)
+      .attr("height", height)
+      .attr("x", xAxis)
+      .attr("y", yAxis)
     ;
 
   // border
-  if (stroke != null)
-  {
+  if (stroke != null) {
     x.attr("stroke", stroke);
   }
 
   // title / header
-  if (title != null)
-  {
+  if (title != null) {
     x
       .append("title")
       .text(title);
@@ -86,30 +84,28 @@ function drawRectangle(group, colour, height, width, xAxis, yAxis, stroke, title
  */
 function drawText(group, text, size, xAxis, yAxis, colour, xPosition, yPosition) {
   var x =
-  group
-    .append("text")
-    .text(text)
-    .attr("x", xAxis)
-    .attr("y", yAxis)
-    .attr("font-size", size)
+    group
+      .append("text")
+      .text(text)
+      .attr("x", xAxis)
+      .attr("y", yAxis)
+      .attr("font-size", size)
     ;
 
   // colour of text
-  if (colour != null)
-  {
+  if (colour != null) {
     x
-    .attr("fill", colour);
+      .attr("fill", colour);
   }
 
   // positioning if specified
   if (
-    (xPosition != null)&&
+    (xPosition != null) &&
     (yPosition != null)
-  )
-  {
+  ) {
     x
-    .attr("dx", xPosition)
-    .attr("dy", yPosition);
+      .attr("dx", xPosition)
+      .attr("dy", yPosition);
   }
 }
 
@@ -128,8 +124,7 @@ function plotLine(valueProperty, colour, curve) {
     .x(d => x(d.date))
     .y(d => y(d[valueProperty]));
 
-  switch (curve)
-  {
+  switch (curve) {
     case "linear":
       line.curve(d3.curveLinear);
       break;
@@ -165,138 +160,150 @@ function plotLine(valueProperty, colour, curve) {
     * - xStart (int)
     * - yStart (int)
     */
-   function drawLegend(fields, group, titleLength, xStart, yStart) {
+function drawLegend(fields, group, titleLength, xStart, yStart) {
 
-    // for each item in the legend
-    var itemWidth = 10, itemHeight = 30;
-    
-    // positioning of everything
-    var Xorigin = xStart;
-    var Yorigin = yStart - itemHeight * fields.length;
-    var Xmargin = 5, Ymargin = 20;
+  // for each item in the legend
+  var itemWidth = 10, itemHeight = 30;
 
-    // for the legend table
-    var height = fields.length * itemHeight + 2 * Ymargin;
-    var width = 200, fill = "white", border = "grey";
+  // positioning of everything
+  var Xorigin = xStart;
+  var Yorigin = yStart - itemHeight * fields.length;
+  var Xmargin = 5, Ymargin = 20;
 
-      /*
-       * link to the group which has our chart objects
-       * this is the legend table
-       */
-      drawRectangle(
-        group,      // links to chart
-        fill,       // fill
-        height,     // height 
-        width,      // width 
-        Xorigin,    // X axis 
-        Yorigin,    // Y axis
-        border,     // border colour
-        null        // no title here, reused function
-        );
+  // for the legend table
+  var height = fields.length * itemHeight + 2 * Ymargin;
+  var width = 200, fill = "white", border = "grey";
 
-     // to store our fields with colour & title
-     var elements = [];
-     
-     // loop through fields, massage for elements array
-     for (var i = 0; i < fields.length; i++)
-     {
-       /*
-        * give each one the correct colour
-        * also used by charts in other functions
-        * to match things up
-        */
-       var element = {
-         colour: d3.schemeCategory10[i],
-         title: fields[i]
-       };
+  /*
+   * link to the group which has our chart objects
+   * this is the legend table
+   */
+  drawRectangle(
+    group,      // links to chart
+    fill,       // fill
+    height,     // height 
+    width,      // width 
+    Xorigin,    // X axis 
+    Yorigin,    // Y axis
+    border,     // border colour
+    null        // no title here, reused function
+  );
 
-       // add into elements array
-       elements.push(element);
+  // to store our fields with colour & title
+  var elements = [];
 
-       // DEBUG
-       //console.dir(element);
-     }
+  // loop through fields, massage for elements array
+  for (var i = 0; i < fields.length; i++) {
+    /*
+     * give each one the correct colour
+     * also used by charts in other functions
+     * to match things up
+     */
+    var element = {
+      colour: d3.schemeCategory10[i],
+      title: fields[i]
+    };
 
-     // update y axis for items 
-     var currentY = Yorigin + Ymargin;
+    // add into elements array
+    elements.push(element);
 
-     // each item
-     elements.forEach(function (x) {
-      
-      /*
-       * each item colour box (key)
-       */
-      drawRectangle(
-        group,                // links to parent rectangle
-        x.colour,             // fill
-        itemHeight,           // height 
-        itemWidth,            // width 
-        Xorigin + Xmargin,    // X axis 
-        currentY,             // Y axis
-        border,               // border colour
-        x.title               // adds a tooltip over the colour box
-        );
+    // DEBUG
+    //console.dir(element);
+  }
 
-      /*
-       * if title is massive, limit to 8 chars then 
-       * ... at the end, basically substring
-       */
-      var title = x.title;
-      if (title.length > titleLength)
-      {
-        title = x.title.substring(0, titleLength) +"...";
-      }
+  // update y axis for items 
+  var currentY = Yorigin + Ymargin;
 
-      /*
-       * each item text
-       */
-        drawText(
-          group,              // links to parent rectangle 
-          title,              // actual name of line (data field) 
-          "14pt",             // font size 
-          Xorigin +Xmargin,   // X axis 
-          currentY,           // Y axis
-          x.colour,           // same colour as line
-          itemWidth + Xmargin,// - same height as colour box
-          Ymargin             // - above width, this is to the right
-        );
+  // each item
+  elements.forEach(function (x) {
 
-        // update position for next item (below it)
-        currentY += itemHeight;
-    
-      });
-   }
+    /*
+     * each item colour box (key)
+     */
+    drawRectangle(
+      group,                // links to parent rectangle
+      x.colour,             // fill
+      itemHeight,           // height 
+      itemWidth,            // width 
+      Xorigin + Xmargin,    // X axis 
+      currentY,             // Y axis
+      border,               // border colour
+      x.title               // adds a tooltip over the colour box
+    );
 
-   /*
-    * show circle points
-    * parameters:
-    * - fields (array of data fields)
-    * - group (svg data group)
-    * - radius (int)
-    */
-   function drawCirclePoints(fields, group, radius) 
-   {
-    // create a point at each data value bit
-    data.forEach(function (point) {
+    /*
+     * if title is massive, limit to 8 chars then 
+     * ... at the end, basically substring
+     */
+    var title = x.title;
+    if (title.length > titleLength) {
+      title = x.title.substring(0, titleLength) + "...";
+    }
 
-      // every data value field
-      for (var i = 0; i < fields.length; i++) {
-        group
-              .append("circle")
-              .attr("fill", d3.schemeCategory10[i])               // should be same colour as line
-              .attr("r", radius)                                       // radius
-              .attr("cx", x(point.date))                          // bang on data point X
-              .attr("cy", y(point[fields[i]]))                    // data point Y
-              .append("title")                                    // alt text
-              .text("Date: " +                                    // alt text - date & format
-                      d3.timeFormat("%d-%b-%Y")(point.date) + 
-                      "\n" + 
-                      fields[i] +                                 // alt text - name of field
-                      ": " + 
-                      point[fields[i]]                            // alt text - value of field
-                    )
-        ;
-      }
+    /*
+     * each item text
+     */
+    drawText(
+      group,              // links to parent rectangle 
+      title,              // actual name of line (data field) 
+      "14pt",             // font size 
+      Xorigin + Xmargin,   // X axis 
+      currentY,           // Y axis
+      x.colour,           // same colour as line
+      itemWidth + Xmargin,// - same height as colour box
+      Ymargin             // - above width, this is to the right
+    );
+
+    // update position for next item (below it)
+    currentY += itemHeight;
+
   });
+}
 
-   }
+/*
+ * show circle points
+ * parameters:
+ * - fields (array of data fields)
+ * - group (svg data group)
+ * - radius (int)
+ */
+function drawCirclePoints(fields, group, radius) {
+  // create a point at each data value bit
+  data.forEach(function (point) {
+
+    // every data value field
+    for (var i = 0; i < fields.length; i++) {
+      group
+        .append("circle")
+        .attr("fill", d3.schemeCategory10[i])               // should be same colour as line
+        .attr("r", radius)                                       // radius
+        .attr("cx", x(point.date))                          // bang on data point X
+        .attr("cy", y(point[fields[i]]))                    // data point Y
+        .append("title")                                    // alt text
+        .text("Date: " +                                    // alt text - date & format
+          d3.timeFormat("%d-%b-%Y")(point.date) +
+          "\n" +
+          fields[i] +                                 // alt text - name of field
+          ": " +
+          point[fields[i]]                            // alt text - value of field
+        )
+        ;
+    }
+  });
+}
+
+function drawGridlines(group, ticks)
+{
+  var yGridlines = d3.axisLeft(y)
+                    .ticks(ticks)
+                    .tickFormat("")
+                    .tickSize(-width);
+
+  var gridy = group
+              .append("g")
+              .attr("class", "grid")
+              .call(yGridlines)
+            ;
+
+  yGridlines(gridy);
+}

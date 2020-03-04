@@ -28,3 +28,14 @@
              {
                  border: 3px solid green;
              }
+
+             /*
+              * when showing grid lines, make them barely visible
+              * otherwise nasty on the eyes
+              */
+             .grid line
+             {
+                 stroke: lightgrey;
+                 stroke-opacity: 0.5;
+                 shape-rendering: crispEdges;
+             }
