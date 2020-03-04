@@ -22,6 +22,15 @@
         var margin = 50, width = 1280, height = 768;
 
         /*
+         * if there is already a chart element called 'svg' then remove it
+         * this could be adapted for id's, e.g. redrawing charts after 
+         * dynamically altered
+         */
+         d3.select("body")
+            .append("svg")
+            .remove();
+
+        /*
          * use the <body> element
          * add a new <svg> scalable vector graphics element
          */
@@ -97,9 +106,21 @@
             // set values from bottom to top, min to max
             .range([height, 0])
 
-            // emphasise bigger values
+            /*
+             * emphasize values
+             * - here 1.5 means higher values have more space
+             *   lower values are more scrunched up
+             * - change to 1 to have same gaps from slightly higher values
+             * - change to .5 to emphasize lower values and scrunch up higher values
+             */
             .exponent(1.5)
             ;
+
+            /*
+             * show each field in console (debugging)
+             * which can be viewed via 'inspect' in browser
+             */
+             console.log("Y Axis, Scale: Pow, Exponent: 1.5");
 
         /*
          * first get a list of the data fields, e.g. everything
