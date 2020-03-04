@@ -231,7 +231,8 @@ function plotLine(valueProperty, colour, curve) {
         itemWidth,            // width 
         Xorigin + Xmargin,    // X axis 
         currentY,             // Y axis
-        border               // border colour
+        border,               // border colour
+        x.title               // adds a tooltip over the colour box
         );
 
       /*
@@ -262,4 +263,38 @@ function plotLine(valueProperty, colour, curve) {
         currentY += itemHeight;
     
       });
+   }
+
+   /*
+    * show circle points
+    * parameters:
+    * - fields (array of data fields)
+    * - group (svg data group)
+    * - radius (int)
+    */
+   function drawCirclePoints(fields, group, radius) 
+   {
+    // create a point at each data value bit
+    data.forEach(function (point) {
+
+      // every data value field
+      for (var i = 0; i < fields.length; i++) {
+        group
+              .append("circle")
+              .attr("fill", d3.schemeCategory10[i])               // should be same colour as line
+              .attr("r", radius)                                       // radius
+              .attr("cx", x(point.date))                          // bang on data point X
+              .attr("cy", y(point[fields[i]]))                    // data point Y
+              .append("title")                                    // alt text
+              .text("Date: " +                                    // alt text - date & format
+                      d3.timeFormat("%d-%b-%Y")(point.date) + 
+                      "\n" + 
+                      fields[i] +                                 // alt text - name of field
+                      ": " + 
+                      point[fields[i]]                            // alt text - value of field
+                    )
+        ;
+      }
+  });
+
    }
