@@ -37,7 +37,7 @@
         var dataGroup = d3.select("body")
             .append("svg")
             // stops labels being cut-off by '+margin'
-            .attr("width", width + margin)
+            .attr("width", width + 2 * margin)
             .attr("height", height + 2 * margin)
 
             // position the group which will store the svg with margin all around
@@ -208,7 +208,7 @@
          * now show the legend, using data fields excluding date
          * also the group which has our chart objects in it
          */
-        drawLegend(dataFields, dataGroup, 12);
+        drawLegend(dataFields, dataGroup, 12, 100, 100);
 
         drawCirclePoints(dataFields, dataGroup, 10);
         
@@ -216,9 +216,9 @@
 
     <p>
         summary:
-        <br />- blue shows value changes then stays horizontal
-        <br />- curve shows trend (basis never hits points, cardinal overshoots, monotoneX is best)
-        <br />- green shows direct travel as a line
+        <br />- green shows value changes then stays horizontal
+        <br />- blue shows direct travel as a line
+        <br />- orange shows trend 
     </p>
 </body>
 

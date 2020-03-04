@@ -162,15 +162,17 @@ function plotLine(valueProperty, colour, curve) {
     * - fields (array of data fields)
     * - group (svg data group)
     * - titleLength (int)
+    * - xStart (int)
+    * - yStart (int)
     */
-   function drawLegend(fields, group, titleLength) {
+   function drawLegend(fields, group, titleLength, xStart, yStart) {
 
     // for each item in the legend
     var itemWidth = 10, itemHeight = 30;
     
     // positioning of everything
-    var Xorigin = 725;
-    var Yorigin = 400 - itemHeight * fields.length;
+    var Xorigin = xStart;
+    var Yorigin = yStart - itemHeight * fields.length;
     var Xmargin = 5, Ymargin = 20;
 
     // for the legend table
