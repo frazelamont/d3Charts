@@ -1,25 +1,37 @@
 <html>
 <head>
-    <!--
+        <!--
             D3 Data Driven Documents - minified base library
         -->
-    <script src="node_modules/d3/dist/d3.min.js"></script>
-
-    <!--
+        <script src="../node_modules/d3/dist/d3.min.js"></script>
+        
+        <!--
             my d3 functions
         -->
-    <script src="scripts/test.js"></script>
+        <script src="../scripts/circle.js"></script>
+        <script src="../scripts/rectangle.js"></script>
+        <script src="../scripts/text.js"></script>
+        <script src="../scripts/line.js"></script>
 
-    <!--
+        <!--
             my css styles
         -->
-    <link rel="stylesheet" href="styles/test.css" />
+        <link rel="stylesheet" href="../styles/test.css" />
 </head>
 <body>
     <script>
 
         // core settings (1280 is wide screen, 1024 is normal) - best to go wide
         var margin = 50, width = 1280, height = 768;
+
+        /*
+         * if there is already a chart element called 'svg' then remove it
+         * this could be adapted for id's, e.g. redrawing charts after 
+         * dynamically altered
+         */
+         d3.select("body")
+            .append("svg")
+            .remove();
 
         /*
          * use the <body> element
@@ -89,14 +101,29 @@
         /*
          * setup our Y-Axis, vertical, using the values
          */
-        var y = d3.scaleSqrt()
+        var y = d3.scalePow()
 
             // get the min & max values in array, e.g. lowest & highest
             .domain(d3.extent(data, function (d) { return d.value }))
 
             // set values from bottom to top, min to max
             .range([height, 0])
+
+            /*
+             * emphasize values
+             * - here 1.5 means higher values have more space
+             *   lower values are more scrunched up
+             * - change to 1 to have same gaps from slightly higher values
+             * - change to .5 to emphasize lower values and scrunch up higher values
+             */
+            .exponent(1.5)
             ;
+
+            /*
+             * show each field in console (debugging)
+             * which can be viewed via 'inspect' in browser
+             */
+             console.log("Y Axis, Scale: Pow, Exponent: 1.5");
 
         /*
          * first get a list of the data fields, e.g. everything

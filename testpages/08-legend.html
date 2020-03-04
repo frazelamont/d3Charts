@@ -1,19 +1,23 @@
 <html>
 <head>
-    <!--
+        <!--
             D3 Data Driven Documents - minified base library
         -->
-    <script src="node_modules/d3/dist/d3.min.js"></script>
-
-    <!--
+        <script src="../node_modules/d3/dist/d3.min.js"></script>
+        
+        <!--
             my d3 functions
         -->
-    <script src="scripts/test.js"></script>
+        <script src="../scripts/circle.js"></script>
+        <script src="../scripts/rectangle.js"></script>
+        <script src="../scripts/text.js"></script>
+        <script src="../scripts/line.js"></script>
+        <script src="../scripts/legend.js"></script>
 
-    <!--
+        <!--
             my css styles
         -->
-    <link rel="stylesheet" href="styles/test.css" />
+        <link rel="stylesheet" href="../styles/test.css" />
 </head>
 <body>
     <script>
@@ -53,19 +57,18 @@
          */
         var data = 
         [
-            { date: "11/01/2018", value: 11, extraValue: 18 },
-            { date: "11/02/2018", value: 23, extraValue: 29 },
-            { date: "11/03/2018", value: 13, extraValue: 15 },
-            { date: "11/04/2018", value: 15, extraValue: 12 },
-            { date: "11/05/2018", value: 37, extraValue: 48 },
-            { date: "11/06/2018", value: 32, extraValue: 38 },
-            { date: "11/07/2018", value: 38, extraValue: 28 },
-            { date: "11/08/2018", value: 42, extraValue: 34 },
-            { date: "11/09/2018", value: 43, extraValue: 28 },
-            { date: "11/10/2018", value: 21, extraValue: 37 },
-            { date: "11/11/2018", value: 24, extraValue: 26 },
-            { date: "11/12/2018", value: 50, extraValue: 43 },
-            { date: "11/13/2018", value: 53, extraValue: 57 }
+            { date: "01/11/2018", value: 11, extraValue: 18, third: 14 },
+            { date: "02/11/2018", value: 23, extraValue: 29, third: 26 },
+            { date: "03/11/2018", value: 13, extraValue: 15, third: 19 },
+            { date: "04/11/2018", value: 15, extraValue: 12, third: 14.5 },
+            { date: "05/11/2018", value: 37, extraValue: 48, third: 41 },
+            { date: "06/11/2018", value: 32, extraValue: 38, third: 35 },
+            { date: "07/11/2018", value: 38, extraValue: 28, third: 32 },
+            { date: "08/11/2018", value: 42, extraValue: 34, third: 38 },
+            { date: "09/11/2018", value: 43, extraValue: 28, third: 37 },
+            { date: "10/11/2018", value: 21, extraValue: 37, third: 31 },
+            { date: "11/11/2018", value: 24, extraValue: 26, third: 25 },
+            { date: "12/11/2018", value: 50, extraValue: 43, third: 48 }
         ];                
 
         /*
@@ -116,11 +119,8 @@
             .exponent(1.5)
             ;
 
-            /*
-             * show each field in console (debugging)
-             * which can be viewed via 'inspect' in browser
-             */
-             console.log("Y Axis, Scale: Pow, Exponent: 1.5");
+            // DEBUG
+            //console.log("Y Axis, Scale: Pow, Exponent: 1.5");
 
         /*
          * first get a list of the data fields, e.g. everything
@@ -138,12 +138,17 @@
                     dataFields.push(field);
                 }
 
-                /*
-                 * show each field in console (debugging)
-                 * which can be viewed via 'inspect' in browser
-                 */
-                console.log("Data Field: " +field);
+                // DEBUG
+                //console.log("Data Field: " +field);
             }
+
+        /*
+         * linear is normal line graph, but what if the data is units?
+         * - e.g. units, 1 or 2, not 1.5, think of TVs etc in stock
+         * - stepAfter would be if say units at start of the day
+         * - stepBefore would be units at th end of the day
+         */
+        var LineType = ["linear", "monotone", "stepAfter"];
 
         /*
          * now create new line chart based
@@ -152,7 +157,7 @@
          */
         for (var i = 0; i < dataFields.length; i++)
         {
-            plotLine(dataFields[i], colours[i])
+            plotLine(dataFields[0], colours[i], LineType[i])
         }
 
         /*
@@ -165,8 +170,12 @@
             .attr("class", "xAxisGroup")
             .attr("transform", "translate(0," + height + ")")
 
+        /*
+         * the horizontal axis
+         * - ticks are spaces between values
+         */
         var xAxis = d3.axisBottom(x)
-            .tickFormat(d3.timeFormat("%Y-%m-%d"));
+            .tickFormat(d3.timeFormat("%Y-%b"));
 
         xAxis(xAxisGroup);
 
@@ -181,6 +190,7 @@
 
         /*
          * the vertical axis
+         * - the ticks are the spaces between values
          */
         var yAxis = d3.axisLeft(y)
                       .tickFormat(
@@ -197,8 +207,21 @@
             ;
 
         yAxis(yAxisGroup);
+
+        /*
+         * now show the legend, using data fields excluding date
+         * also the group which has our chart objects in it
+         */
+        drawLegend(dataFields, dataGroup, 12, 100, 100);
         
     </script>
+
+    <p>
+        summary:
+        <br />- blue shows value changes then stays horizontal
+        <br />- curve shows trend (basis never hits points, cardinal overshoots, monotoneX is best)
+        <br />- green shows direct travel as a line
+    </p>
 </body>
 
 </html>
