@@ -292,18 +292,57 @@ function drawCirclePoints(fields, group, radius) {
   });
 }
 
-function drawGridlines(group, ticks)
+function drawGridlines(group, ticks, columns, type)
+{
+  switch (type)
+  {
+    case "y":
+      drawGridY(group, ticks);
+      break;
+
+    case "x":
+      drawGridX(group, columns);
+      break;
+
+    case "both":
+      drawGridY(group, ticks);
+      drawGridX(group, columns);
+
+    case "default":
+      break;
+  }
+}
+
+function drawGridY(group, ticks)
 {
   var yGridlines = d3.axisLeft(y)
-                    .ticks(ticks)
-                    .tickFormat("")
-                    .tickSize(-width);
+    .ticks(ticks)
+    .tickFormat("")
+    .tickSize(-width)
+    ;
 
   var gridy = group
-              .append("g")
-              .attr("class", "grid")
-              .call(yGridlines)
-            ;
+    .append("g")
+    .attr("class", "grid")
+    .call(yGridlines)
+    ;
 
   yGridlines(gridy);
+}
+
+function drawGridX(group, columns)
+{
+  var xGridlines = d3.axisBottom(x)
+      .ticks(columns)
+      .tickFormat("")
+      .tickSize(height)
+    ;
+    
+  var gridx = group
+      .append("g")
+      .attr("class", "grid")
+      .call(xGridlines)
+      ;
+
+  xGridlines(gridx);
 }

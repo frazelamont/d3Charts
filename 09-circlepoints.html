@@ -65,8 +65,10 @@
             { date: "10/11/2018", value: 21, extraValue: 37, third: 31 },
             { date: "11/11/2018", value: 24, extraValue: 26, third: 25 },
             { date: "12/11/2018", value: 50, extraValue: 43, third: 48 }
-        ];                
-
+        ];    
+        
+        
+        
         /*
          * set our list of colours to use for various lines
          * using D3 list of 10 colours, any more than that
@@ -77,10 +79,19 @@
         // convert date strings to actual datetime objects
         var parseTime = d3.timeParse("%m/%d/%Y");
 
+        /*
+         * get the max value form our core data column
+         */ 
+         var maxValue = d3.max(data.map(d => d.value));
+
+        // how many rows (columns) - get data in loop below
+        var columns = 0;
+
         // fix data array with actual dates
         data.forEach(
             function (d) {
                 d.date = parseTime(d.date);
+                columns++;
             }
         );
 
@@ -205,12 +216,9 @@
         yAxis(yAxisGroup);
 
         /*
-         * get the max value form our core data column
-         * which is used to set the Y axis values, then
-         * use this to set the gridlines tick setting (spaces)
+         * show grid lines, y (vertial), x (horizontal) or both
          */
-        var max = d3.max(data.map(d => d.value));
-        drawGridlines(dataGroup, max);
+        drawGridlines(dataGroup, maxValue, (columns*3), "both");
 
         /*
          * now show the legend, using data fields excluding date
