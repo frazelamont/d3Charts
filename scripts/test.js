@@ -82,14 +82,32 @@ function drawText(group, text, size, xAxis, yAxis) {
     * - valueProperty (field in array for data)
     * - colour (string)
     */
-function plotLine(valueProperty, colour) {
+function plotLine(valueProperty, colour, curve) {
   /*
    * the actual line data
    */
   var line = d3.line()
     .x(d => x(d.date))
-    .y(d => y(d[valueProperty]))
-    ;
+    .y(d => y(d[valueProperty]));
+
+  switch (curve)
+  {
+    case "linear":
+      line.curve(d3.curveLinear);
+      break;
+    case "stepAfter":
+      line.curve(d3.curveStepAfter);
+      break;
+    case "basis":
+      line.curve(d3.curveCardinal);
+      break;
+    case "monotone":
+      line.curve(d3.curveMonotoneX);
+      break;
+    case "default":
+      break;
+  }
+
   /*
    * the appearance
    */
