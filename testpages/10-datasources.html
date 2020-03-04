@@ -8,12 +8,12 @@
     <!--
             my d3 functions
         -->
-    <script src="../scripts/line.js"></script>
-    <script src="../scripts/grid.js"></script>
+    <script src="../scripts/line_v2.js"></script>
+    <script src="../scripts/grid_v2.js"></script>
     <script src="../scripts/rectangle.js"></script>
     <script src="../scripts/text.js"></script>
     <script src="../scripts/legend.js"></script>
-    <script src="../scripts/circle.js"></script>
+    <script src="../scripts/circle_v2.js"></script>
     <!--
             my css styles
         -->
@@ -21,6 +21,32 @@
 </head>
 <body>
     <script>
+
+/*
+         * data array: multi-variant (e.g. 2nd column)
+         * - when using log scales d3.scaleLog() 
+         *   unable to have '0' as values, so use '1' as minimal
+         * - so use Square Root - NEVER EDIT THE DATA to fit a graph
+         *   e.g. d3.scaleSqrt()
+         */
+        
+
+          d3.dsv(",", "../data/data2.csv", function(d) {
+            return {
+                date: d.date, //
+                value: +d.value, // convert to number
+                extraValue: +d.extraValue, // convert to number
+                third: +d.third, // convert to number
+            };
+            }).then(result => buildChart(result)); 
+
+        function buildChart(fileData)
+        {
+
+            var data = fileData;
+            
+            // DEBUG
+            console.log(data);
 
         // core settings (1280 is wide screen, 1024 is normal) - best to go wide
         var margin = 50, width = 1280, height = 768;
@@ -46,31 +72,7 @@
 
             // position the group which will store the svg with margin all around
             .append("g")
-            .attr("transform", "translate(" + margin + ", " + margin + ")")
-
-        /*
-         * data array: multi-variant (e.g. 2nd column)
-         * - when using log scales d3.scaleLog() 
-         *   unable to have '0' as values, so use '1' as minimal
-         * - so use Square Root - NEVER EDIT THE DATA to fit a graph
-         *   e.g. d3.scaleSqrt()
-         */
-        
-        var data = [];
-        d3.csv("data/data.csv", function(data) 
-          {
-            data = data.map(
-                    function(d) 
-                    { 
-                        return [
-                             +d["value"], 
-                             +d["extraValue"],
-                             +d[third]
-                        ]; 
-                    }
-                );
-          }
-        );
+            .attr("transform", "translate(" + margin + ", " + margin + ")")  
         
         /*
          * set our list of colours to use for various lines
@@ -98,6 +100,7 @@
             }
         );
 
+        console.log("date checked data");
         /*
          * setup our X-Axis, horizontal, using the dates
          */
@@ -132,7 +135,7 @@
             ;
 
             // DEBUG
-            //console.log("Y Axis, Scale: Pow, Exponent: 1.5");
+            console.log("Y Axis, Scale: Pow, Exponent: 1.5");
 
         /*
          * first get a list of the data fields, e.g. everything
@@ -151,7 +154,7 @@
                 }
 
                 // DEBUG
-                //console.log("Data Field: " +field);
+                console.log("Data Field: " +field);
             }
 
         /*
@@ -169,8 +172,20 @@
          */
         for (var i = 0; i < dataFields.length; i++)
         {
-            plotLine(dataFields[i], colours[i], LineType[i])
+           var line = plotLine(dataFields[i], colours[i], LineType[i], dataGroup, data, x, y)
+              /*
+   * the appearance
+   */
+   dataGroup.append("path")
+    .data([data])
+    .attr("fill", "none")
+    .attr("stroke", colours[i])
+    .attr("d", line);
+
         }
+
+        // DEBUG
+        console.log("plotted lines");
 
         /*
          * group x axis elements
@@ -237,7 +252,7 @@
         /*
          * show grid lines, y (vertial), x (horizontal) or both
          */
-        drawGridlines(dataGroup, maxValue, (columns*3), "both");
+        drawGridlines(dataGroup, maxValue, (columns*3), "both", y, x, width, height);
 
         /*
          * now show the legend, using data fields excluding date
@@ -245,8 +260,8 @@
          */
         drawLegend(dataFields, dataGroup, 12, 100, 100);
 
-        drawCirclePoints(dataFields, dataGroup, 10);
-        
+        drawCirclePoints(dataFields, dataGroup, 10, data, x, y);
+    }
     </script>
 
     <p>
