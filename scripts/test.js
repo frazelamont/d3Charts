@@ -79,3 +79,28 @@ function drawProportionalCircle(group, radius, colour, xAxis, yAxis)
                   .attr("font-size", size)
                 ;
             }
+
+         /*
+             * show a line
+             * parameters:
+             * - valueProperty (field in array for data)
+             * - colour (string)
+             */
+         function plotLine(valueProperty, colour)
+         {
+           /*
+            * the actual line data
+            */
+            var line = d3.line()
+                .x(d => x(d.date))
+                .y(d => y(d[valueProperty]))
+                ;
+           /*
+            * the appearance
+            */
+            dataGroup.append("path")
+                .data([data])
+                .attr("fill", "none")
+                .attr("stroke", colour)
+                .attr("d", line)          
+        }
