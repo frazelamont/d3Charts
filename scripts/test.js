@@ -47,6 +47,7 @@ function drawProportionalCircle(group, radius, colour, xAxis, yAxis) {
  * - yAxis (int)
  */
 function drawRectangle(group, colour, height, width, xAxis, yAxis, stroke, title) {
+  var x = 
   group
     .append("rect")
     .attr("fill", colour)
@@ -59,13 +60,13 @@ function drawRectangle(group, colour, height, width, xAxis, yAxis, stroke, title
   // border
   if (stroke != null)
   {
-    group.attr("stroke", stroke);
+    x.attr("stroke", stroke);
   }
 
   // title / header
   if (title != null)
   {
-    group
+    x
       .append("title")
       .text(title);
   }
@@ -79,8 +80,12 @@ function drawRectangle(group, colour, height, width, xAxis, yAxis, stroke, title
  * - size (string)
  * - xAxis (int)
  * - yAxis (int)
+ * - colour (string)
+ * - xPosition (int)
+ * - yPosition (int)
  */
-function drawText(group, text, size, xAxis, yAxis) {
+function drawText(group, text, size, xAxis, yAxis, colour, xPosition, yPosition) {
+  var x =
   group
     .append("text")
     .text(text)
@@ -88,6 +93,24 @@ function drawText(group, text, size, xAxis, yAxis) {
     .attr("y", yAxis)
     .attr("font-size", size)
     ;
+
+  // colour of text
+  if (colour != null)
+  {
+    x
+    .attr("fill", colour);
+  }
+
+  // positioning if specified
+  if (
+    (xPosition != null)&&
+    (yPosition != null)
+  )
+  {
+    x
+    .attr("dx", xPosition)
+    .attr("dy", yPosition);
+  }
 }
 
 /*
@@ -137,18 +160,27 @@ function plotLine(valueProperty, colour, curve) {
     * show chart legend
     * parameters:
     * - fields (array of data fields)
+    * - group (svg data group)
+    * - titleLength (int)
     */
-   function drawLegend(fields, group) {
+   function drawLegend(fields, group, titleLength) {
 
-    var Xorigin = 725, Yorigin = 400;
-    var Xmargin = 5, Ymargin = 20, itemHeight = 50;
+    // for each item in the legend
+    var itemWidth = 10, itemHeight = 30;
+    
+    // positioning of everything
+    var Xorigin = 725;
+    var Yorigin = 400 - itemHeight * fields.length;
+    var Xmargin = 5, Ymargin = 20;
 
+    // for the legend table
     var height = fields.length * itemHeight + 2 * Ymargin;
     var width = 200, fill = "white", border = "grey";
 
-    var itemWidth = 100;
-
-      // link to the group which has our chart objects
+      /*
+       * link to the group which has our chart objects
+       * this is the legend table
+       */
       drawRectangle(
         group,      // links to chart
         fill,       // fill
@@ -183,13 +215,14 @@ function plotLine(valueProperty, colour, curve) {
        //console.dir(element);
      }
 
+     // update y axis for items 
      var currentY = Yorigin + Ymargin;
+
+     // each item
      elements.forEach(function (x) {
       
       /*
-       * now the items inside the box
-       * e.g. the rows
-       * - these are the child rectangles
+       * each item colour box (key)
        */
       drawRectangle(
         group,                // links to parent rectangle
@@ -201,6 +234,31 @@ function plotLine(valueProperty, colour, curve) {
         border               // border colour
         );
 
+      /*
+       * if title is massive, limit to 8 chars then 
+       * ... at the end, basically substring
+       */
+      var title = x.title;
+      if (title.length > titleLength)
+      {
+        title = x.title.substring(0, titleLength) +"...";
+      }
+
+      /*
+       * each item text
+       */
+        drawText(
+          group,              // links to parent rectangle 
+          title,              // actual name of line (data field) 
+          "14pt",             // font size 
+          Xorigin +Xmargin,   // X axis 
+          currentY,           // Y axis
+          x.colour,           // same colour as line
+          itemWidth + Xmargin,// - same height as colour box
+          Ymargin             // - above width, this is to the right
+        );
+
+        // update position for next item (below it)
         currentY += itemHeight;
     
       });
