@@ -307,6 +307,7 @@ function drawGridlines(group, ticks, columns, type)
     case "both":
       drawGridY(group, ticks);
       drawGridX(group, columns);
+      break;
 
     case "default":
       break;

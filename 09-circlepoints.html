@@ -64,7 +64,7 @@
             { date: "09/11/2018", value: 43, extraValue: 28, third: 37 },
             { date: "10/11/2018", value: 21, extraValue: 37, third: 31 },
             { date: "11/11/2018", value: 24, extraValue: 26, third: 25 },
-            { date: "12/11/2018", value: 50, extraValue: 43, third: 48 }
+            { date: "12/11/2018", value: 54, extraValue: 43, third: 48 }
         ];    
         
         
@@ -122,8 +122,10 @@
              *   lower values are more scrunched up
              * - change to 1 to have same gaps for all values
              * - change to .5 to emphasize lower values and scrunch up higher values
+             * the .nice() part means the chart has higher numbers than data, so line 
+             * is always on chart but not at top with no number
              */
-            .exponent(1)
+            .exponent(1).nice()
             ;
 
             // DEBUG
@@ -182,9 +184,23 @@
          * - ticks are spaces between values
          */
         var xAxis = d3.axisBottom(x)
-            .tickFormat(d3.timeFormat("%Y-%b"));
+            .tickFormat(
+                d3.timeFormat("%b %Y")          // format of label
+            )
+            .tickSize(10)                       // push down from line of x axis
+            ;
 
         xAxis(xAxisGroup);
+
+        /*
+         * slightly rotate x axis labels, ensures no overlap
+         * - look at page source, its like a js/css dom
+         * - so choose all hierarchial elements for labels
+         */
+        d3
+         .selectAll(".xAxisGroup .tick text")
+         .attr("transform", "rotate(-10)")
+         ;
 
         /*
          * group y axis elements
