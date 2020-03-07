@@ -163,8 +163,11 @@
              * on each data field, with its own colour
              * from both dataFields & colours arrays
              */
-            for (var i = 0; i < dataFields.length; i++) {
+            for (var i = 0; i < dataFields.length; i++) 
+            {
+                // put the points of the line in place
                 var line = plotLine(dataFields[i], colours[i], LineType[i], dataGroup, data, x, y)
+
                 /*
                   * the appearance
                   */
