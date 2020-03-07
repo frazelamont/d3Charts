@@ -193,7 +193,7 @@
 
             /*
              * the horizontal axis
-             * - ticks are spaces between values
+             * - ticks are lines between values
              */
             var xAxis = d3.axisBottom(x)
                 .tickFormat(
@@ -225,14 +225,14 @@
 
             /*
              * the vertical axis
-             * - the ticks are the spaces between values
+             * - the ticks are the lines between values
              */
             var yAxis = d3.axisLeft(y)
                 .tickFormat(
                     d => y.tickFormat(
 
-                        // 62 ticks
-                        62, d3.format(
+                        // 0 ticks here
+                        0, d3.format(
 
                             // include commas if necessary (e.g. 1,012)
                             " ,d")
@@ -246,7 +246,16 @@
             /*
              * show grid lines, y (vertical), x (horizontal) or both
              */
-            drawGridlines(dataGroup, (maxValue / 2), (columns * 2), "both", y, x, width, height);
+            drawGridlines(
+                dataGroup,              // add to svg group
+                (maxValue / 2),         // lines on Y (vertical)
+                (columns * 2),          // lines on X (horizontal)
+                "both",                 // show lines, x, y, both?
+                y,                      // y axis
+                x,                      // x axis
+                width,                  // chart width
+                height                  // chart height
+            );
 
             /*
              * now show the legend, using data fields excluding date
@@ -254,6 +263,9 @@
              */
             drawLegend(dataFields, dataGroup, 12, 100, 100);
 
+            /*
+             * show circles at the points of the values
+             */
             drawCirclePoints(dataFields, dataGroup, 10, data, x, y);
         }
     </script>
