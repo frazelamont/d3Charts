@@ -19,13 +19,16 @@ function drawGridlines(group, ticks, columns, type, y, x, width, height)
       break;
 
     case "both":
-      drawGridY(group, ticks, y);
-      drawGridX(group, columns, x);
+      drawGridY(group, ticks, y, width);
+      drawGridX(group, columns, x, height);
       break;
 
     case "default":
       break;
   }
+
+  // DEBUG
+  console.log("gridlines v2");
 }
 
 /*
@@ -39,7 +42,7 @@ function drawGridY(group, ticks, y, width)
   var yGridlines = d3.axisLeft(y)
     .ticks(ticks)
     .tickFormat("")
-    .tickSize(-width)
+    .tickSize(-width)    
     ;
 
   var gridy = group
@@ -49,6 +52,9 @@ function drawGridY(group, ticks, y, width)
     ;
 
   yGridlines(gridy);
+
+  // DEBUG
+  console.log("grid Y");
 }
 
 /*
@@ -72,4 +78,7 @@ function drawGridX(group, columns, x, height)
       ;
 
   xGridlines(gridx);
+
+  // DEBUG
+  console.log("grid X");
 }
