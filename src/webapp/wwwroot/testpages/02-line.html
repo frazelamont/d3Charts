@@ -1,0 +1,143 @@
+<html>
+
+<head>
+    <!--
+            D3 Data Driven Documents - minified base library
+        -->
+        <script src="../lib/d3/dist/d3.min.js"></script>
+        
+        <!--
+            my d3 functions
+        -->
+        <script src="../scripts/circle.js"></script>
+        <script src="../scripts/rectangle.js"></script>
+        <script src="../scripts/text.js"></script>
+
+        <!--
+            my css styles
+        -->
+        <link rel="stylesheet" href="../styles/test.css" />
+</head>
+
+<body>
+    <script>
+
+        // core settings
+        var margin = 50, width = 1024, height = 768;
+
+        /*
+         * use the <body> element
+         * add a new <svg> scalable vector graphics element
+         */
+        var dataGroup = d3.select("body")
+            .append("svg")
+            // stops labels being cut-off by '+margin'
+            .attr("width", width + margin)
+            .attr("height", height + 2 * margin)
+
+            // position the group which will store the svg with margin all around
+            .append("g")
+            .attr("transform", "translate(" + margin + ", " + margin + ")")
+
+        /*
+         * data array
+         */
+        var data = 
+        [
+            { date: "11/01/2018", value: 11 },
+            { date: "11/02/2018", value: 23 },
+            { date: "11/03/2018", value: 13 },
+            { date: "11/04/2018", value: 15 },
+            { date: "11/05/2018", value: 37 },
+            { date: "11/06/2018", value: 32 },
+            { date: "11/07/2018", value: 38 },
+            { date: "11/08/2018", value: 42 },
+            { date: "11/09/2018", value: 43 },
+            { date: "11/10/2018", value: 21 },
+            { date: "11/11/2018", value: 24 },
+            { date: "11/12/2018", value: 50 },
+            { date: "11/13/2018", value: 53 }
+        ];
+                    
+        /*
+          * basic line chart
+          * use fields from data-source
+          */
+        var line = d3.line()
+            .x(d => x(d.date))
+            .y(d => y(d.value))
+            ;
+
+        // convert date strings to actual datetime objects
+        var parseTime = d3.timeParse("%m/%d/%Y");
+
+        // fix data array with actual dates
+        data.forEach(
+            function (d) {
+                d.date = parseTime(d.date);
+            }
+        );
+
+        /*
+         * setup our X-Axis, horizontal, using the dates
+         */
+        var x = d3.scaleTime()
+            // get the min & max values in array, e.g. oldest & newest dates
+            .domain(d3.extent(data, function (d) { return d.date; }))
+
+            // set values from left to right, min to max
+            .range([0, width])
+            ;
+        /*
+         * setup our Y-Axis, vertical, using the values
+         */
+        var y = d3.scaleLinear()
+
+            // get the min & max values in array, e.g. lowest & highest
+            .domain(d3.extent(data, function (d) { return d.value }))
+
+            // set values from bottom to top, min to max
+            .range([height, 0])
+            ;
+
+        /*
+         * now for the line itself
+         */
+        dataGroup.append("path")
+            .data([data])
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("d", line)
+
+        /*
+         * group x axis elements
+         * format time to uk
+         * generate
+         */
+        var xAxisGroup = dataGroup
+            .append("g")
+            .attr("class", "xAxisGroup")
+            .attr("transform", "translate(0," + height + ")")
+
+        var xAxis = d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%Y-%m-%d"));
+
+        xAxis(xAxisGroup);
+
+        /*
+         * group y axis elements
+         * position to left
+         * generate
+         */
+        var yAxisGroup = dataGroup
+            .append("g")
+            .attr("class", "yAxisGroup")
+
+        var yAxis = d3.axisLeft(y);
+
+        yAxis(yAxisGroup);
+
+    </script>
+</body>
+
+</html>

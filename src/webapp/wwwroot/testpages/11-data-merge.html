@@ -1,0 +1,281 @@
+<html>
+
+<head>
+    <!--
+            D3 Data Driven Documents - minified base library
+        -->
+        <script src="../lib/d3/dist/d3.min.js"></script>
+
+    <!--
+            my d3 functions
+        -->
+    <script src="../scripts/line_v2.js"></script>
+    <script src="../scripts/grid_v2.js"></script>
+    <script src="../scripts/rectangle.js"></script>
+    <script src="../scripts/text.js"></script>
+    <script src="../scripts/legend.js"></script>
+    <script src="../scripts/circle_v2.js"></script>
+    
+    <!--
+            my css styles
+        -->
+    <link rel="stylesheet" href="../styles/test.css" />
+</head>
+
+<body>
+    <script>
+
+        /*
+                 * data array: multi-variant (e.g. 2nd column)
+                 * - when using log scales d3.scaleLog() 
+                 *   unable to have '0' as values, so use '1' as minimal
+                 * - so use Square Root - NEVER EDIT THE DATA to fit a graph
+                 *   e.g. d3.scaleSqrt()
+                 */
+
+
+        d3.json("../data/data.json")
+          .then(result => buildChart(result));
+
+        function buildChart(fileData) {
+
+            var data = fileData;
+
+            // DEBUG
+            console.log(data);
+
+            // core settings (1280 is wide screen, 1024 is normal) - best to go wide
+            var margin = 50, width = 1280, height = 768;
+
+            /*
+             * if there is already a chart element called 'svg' then remove it
+             * this could be adapted for id's, e.g. redrawing charts after 
+             * dynamically altered
+             */
+            d3.select("body")
+                .append("svg")
+                .remove();
+
+            /*
+             * use the <body> element
+             * add a new <svg> scalable vector graphics element
+             */
+            var dataGroup = d3.select("body")
+                .append("svg")
+                // stops labels being cut-off by '+margin'
+                .attr("width", width + 2 * margin)
+                .attr("height", height + 2 * margin)
+
+                // position the group which will store the svg with margin all around
+                .append("g")
+                .attr("transform", "translate(" + margin + ", " + margin + ")")
+
+            /*
+             * set our list of colours to use for various lines
+             * using D3 list of 10 colours, any more than that
+             * then use a new chart
+             */
+            var colours = d3.schemeCategory10;
+
+            // convert date strings to actual datetime objects
+            var parseTime = d3.timeParse("%m/%d/%Y");
+
+            /*
+             * get the max value form our core data column
+             */
+            var maxValue = d3.max(data.map(d => d.value));
+
+            // how many rows (columns) - get data in loop below
+            var columns = 0;
+
+            // fix data array with actual dates
+            data.forEach(
+                function (d) {
+                    d.date = parseTime(d.date);
+                    columns++;
+                }
+            );
+
+            console.log("date checked data");
+            /*
+             * setup our X-Axis, horizontal, using the dates
+             */
+            var x = d3.scaleTime()
+                // get the min & max values in array, e.g. oldest & newest dates
+                .domain(d3.extent(data, function (d) { return d.date; }))
+
+                // set values from left to right, min to max
+                .range([0, width])
+                ;
+            /*
+             * setup our Y-Axis, vertical, using the values
+             */
+            var y = d3.scalePow()
+
+                // get the min & max values in array, e.g. lowest & highest
+                .domain(d3.extent(data, function (d) { return d.value }))
+
+                // set values from bottom to top, min to max
+                .range([height, 0])
+
+                /*
+                 * emphasize values
+                 * - here 1.5 means higher values have more space
+                 *   lower values are more scrunched up
+                 * - change to 1 to have same gaps for all values
+                 * - change to .5 to emphasize lower values and scrunch up higher values
+                 * the .nice() part means the chart has higher numbers than data, so line 
+                 * is always on chart but not at top with no number
+                 */
+                .exponent(1).nice()
+                ;
+
+            // DEBUG
+            console.log("Y Axis, Scale: Pow, Exponent: 1.5");
+
+            /*
+             * first get a list of the data fields, e.g. everything
+             * except the date
+             */
+            var dataFields = [];
+
+            // use the first row to get these
+            for (var field in data[0]) {
+                // don't add date field to our array
+                if (field != "date") {
+                    // add each other field to array
+                    dataFields.push(field);
+                }
+
+                // DEBUG
+                console.log("Data Field: " + field);
+            }
+
+            /*
+             * linear is normal line graph, but what if the data is units?
+             * - e.g. units, 1 or 2, not 1.5, think of TVs etc in stock
+             * - stepAfter would be if say units at start of the day
+             * - stepBefore would be units at th end of the day
+             */
+            var LineType = ["linear", "monotone", "stepAfter"];
+
+            /*
+             * now create new line chart based
+             * on each data field, with its own colour
+             * from both dataFields & colours arrays
+             */
+            for (var i = 0; i < dataFields.length; i++) 
+            {
+                // put the points of the line in place
+                var line = plotLine(dataFields[i], colours[i], LineType[i], dataGroup, data, x, y)
+
+                /*
+                  * the appearance
+                  */
+                dataGroup.append("path")
+                    .data([data])
+                    .attr("fill", "none")
+                    .attr("stroke", colours[i])
+                    .attr("d", line);
+            }
+
+            // DEBUG
+            console.log("plotted lines");
+
+            /*
+             * group x axis elements
+             * format time to uk
+             * generate
+             */
+            var xAxisGroup = dataGroup
+                .append("g")
+                .attr("class", "xAxisGroup")
+                .attr("transform", "translate(0," + height + ")");
+
+            /*
+             * the horizontal axis
+             * - ticks are lines between values
+             */
+            var xAxis = d3.axisBottom(x)
+                .tickFormat(
+                    d3.timeFormat("%b %Y")          // format of label
+                )
+                .tickSize(10)                       // push down from line of x axis
+                ;
+
+            xAxis(xAxisGroup);
+
+            /*
+             * slightly rotate x axis labels, ensures no overlap
+             * - look at page source, its like a js/css dom
+             * - so choose all hierarchial elements for labels
+             */
+            d3
+                .selectAll(".xAxisGroup .tick text")
+                .attr("transform", "rotate(-10)")
+                ;
+
+            /*
+             * group y axis elements
+             * position to left
+             * generate
+             */
+            var yAxisGroup = dataGroup
+                .append("g")
+                .attr("class", "yAxisGroup");
+
+            /*
+             * the vertical axis
+             * - the ticks are the lines between values
+             */
+            var yAxis = d3.axisLeft(y)
+                .tickFormat(
+                    d => y.tickFormat(
+
+                        // 0 ticks here
+                        0, d3.format(
+
+                            // include commas if necessary (e.g. 1,012)
+                            " ,d")
+                    )
+                        (d)
+                )
+                ;
+
+            yAxis(yAxisGroup);
+
+            /*
+             * show grid lines, y (vertical), x (horizontal) or both
+             */
+            drawGridlines(
+                dataGroup,              // add to svg group
+                (maxValue / 2),         // lines on Y (vertical)
+                (columns * 2),          // lines on X (horizontal)
+                "both",                 // show lines, x, y, both?
+                y,                      // y axis
+                x,                      // x axis
+                width,                  // chart width
+                height                  // chart height
+            );
+
+            /*
+             * now show the legend, using data fields excluding date
+             * also the group which has our chart objects in it
+             */
+            drawLegend(dataFields, dataGroup, 12, 100, 100);
+
+            /*
+             * show circles at the points of the values
+             */
+            drawCirclePoints(dataFields, dataGroup, 10, data, x, y);
+        }
+    </script>
+    <p>
+        summary:
+        <br />- green shows value changes then stays horizontal
+        <br />- blue shows direct travel as a line
+        <br />- orange shows trend
+    </p>
+</body>
+
+</html>
