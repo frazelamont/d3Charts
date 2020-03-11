@@ -1,0 +1,5 @@
+navigate into src/webapp folder
+
+then type (in the console)
+
+    dotnet run

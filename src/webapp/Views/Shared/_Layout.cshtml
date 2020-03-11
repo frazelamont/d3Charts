@@ -16,6 +16,16 @@
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
+
+           <!--
+            D3 Data Driven Documents - minified base library
+        -->
+        <script src="~/lib/d3/dist/d3.min.js"></script>
+        
+        <!--
+            my css styles
+        -->
+        <link rel="stylesheet" href="~/styles/test.css" />
 </head>
 <body>
     <header>
@@ -28,11 +38,19 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
+
+                        <!-- 
+                            homepage 
+                            -->
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+
+                        <!-- 
+                            charts 
+                            -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Chart" asp-action="Index">Charts</a>
                         </li>
                     </ul>
                 </div>

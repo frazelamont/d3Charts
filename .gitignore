@@ -1,1 +1,6 @@
+# nodejs npm modules
 node_modules
+
+# dotnetcore temp files
+src/webapp/bin
+src/webapp/obj
