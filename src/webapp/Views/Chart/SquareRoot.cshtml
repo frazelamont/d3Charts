@@ -1,0 +1,176 @@
+@{
+    ViewData["Title"] = "Square Root";
+}
+
+        <!--
+            my d3 functions
+        -->
+        <script src="~/scripts/circle.js"></script>
+        <script src="~/scripts/rectangle.js"></script>
+        <script src="~/scripts/text.js"></script>
+        <script src="~/scripts/line.js"></script>
+
+    <script>
+
+        // core settings (1280 is wide screen, 1024 is normal) - best to go wide
+        var margin = 50, width = 1280, height = 768;
+
+        /*
+         * use the <body> element
+         * add a new <svg> scalable vector graphics element
+         */
+        var dataGroup = d3.select("body")
+            .append("svg")
+            // stops labels being cut-off by '+margin'
+            .attr("width", width + margin)
+            .attr("height", height + 2 * margin)
+
+            // position the group which will store the svg with margin all around
+            .append("g")
+            .attr("transform", "translate(" + margin + ", " + margin + ")")
+
+        /*
+         * data array: multi-variant (e.g. 2nd column)
+         * - when using log scales d3.scaleLog() 
+         *   unable to have '0' as values, so use '1' as minimal
+         * - so use Square Root - NEVER EDIT THE DATA to fit a graph
+         *   e.g. d3.scaleSqrt()
+         */
+        var data = 
+        [
+            { date: "11/01/2018", value: 11, extraValue: 18 },
+            { date: "11/02/2018", value: 23, extraValue: 29 },
+            { date: "11/03/2018", value: 13, extraValue: 15 },
+            { date: "11/04/2018", value: 15, extraValue: 12 },
+            { date: "11/05/2018", value: 37, extraValue: 48 },
+            { date: "11/06/2018", value: 32, extraValue: 38 },
+            { date: "11/07/2018", value: 38, extraValue: 28 },
+            { date: "11/08/2018", value: 42, extraValue: 34 },
+            { date: "11/09/2018", value: 43, extraValue: 28 },
+            { date: "11/10/2018", value: 21, extraValue: 37 },
+            { date: "11/11/2018", value: 24, extraValue: 26 },
+            { date: "11/12/2018", value: 50, extraValue: 43 },
+            { date: "11/13/2018", value: 53, extraValue: 57 }
+        ];                
+
+        /*
+         * set our list of colours to use for various lines
+         * using D3 list of 10 colours, any more than that
+         * then use a new chart
+         */
+        var colours = d3.schemeCategory10;
+
+        // convert date strings to actual datetime objects
+        var parseTime = d3.timeParse("%m/%d/%Y");
+
+        // fix data array with actual dates
+        data.forEach(
+            function (d) {
+                d.date = parseTime(d.date);
+            }
+        );
+
+        /*
+         * setup our X-Axis, horizontal, using the dates
+         */
+        var x = d3.scaleTime()
+            // get the min & max values in array, e.g. oldest & newest dates
+            .domain(d3.extent(data, function (d) { return d.date; }))
+
+            // set values from left to right, min to max
+            .range([0, width])
+            ;
+        /*
+         * setup our Y-Axis, vertical, using the values
+         */
+        var y = d3.scaleSqrt()
+
+            // get the min & max values in array, e.g. lowest & highest
+            .domain(d3.extent(data, function (d) { return d.value }))
+
+            // set values from bottom to top, min to max
+            .range([height, 0])
+            ;
+
+        /*
+         * first get a list of the data fields, e.g. everything
+         * except the date
+         */
+        var dataFields = [];
+
+            // use the first row to get these
+            for (var field in data[0])
+            {
+                // don't add date field to our array
+                if (field != "date")
+                {
+                    // add each other field to array
+                    dataFields.push(field);
+                }
+
+                /*
+                 * show each field in console (debugging)
+                 * which can be viewed via 'inspect' in browser
+                 */
+                console.log("Data Field: " +field);
+            }
+
+        /*
+         * now create new line chart based
+         * on each data field, with its own colour
+         * from both dataFields & colours arrays
+         */
+        for (var i = 0; i < dataFields.length; i++)
+        {
+            plotLine(dataFields[i], colours[i])
+        }
+
+        /*
+         * group x axis elements
+         * format time to uk
+         * generate
+         */
+        var xAxisGroup = dataGroup
+            .append("g")
+            .attr("class", "xAxisGroup")
+            .attr("transform", "translate(0," + height + ")")
+
+        var xAxis = d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%Y-%m-%d"));
+
+        xAxis(xAxisGroup);
+
+        /*
+         * group y axis elements
+         * position to left
+         * generate
+         */
+        var yAxisGroup = dataGroup
+            .append("g")
+            .attr("class", "yAxisGroup")
+
+        /*
+         * the vertical axis
+         */
+        var yAxis = d3.axisLeft(y)
+                      .tickFormat(
+                          d => y.tickFormat(
+
+                              // 62 ticks
+                              62, d3.format(
+
+                                  // include commas if necessary (e.g. 1,012)
+                                  " ,d")
+                            )
+                            (d)
+                        )
+            ;
+
+        yAxis(yAxisGroup);
+        
+    </script>
+    <p>
+        uses square root for values of vertical axis, based on initial line (blue)
+        
+    <br />emphasize data, small upper points
+    </p>

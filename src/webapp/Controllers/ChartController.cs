@@ -23,12 +23,111 @@ namespace webapp.Controllers
         {
             return View();
         }
-        
+
         /// <summary>
         /// load json file as data source
         /// </summary>
         /// <returns></returns>
         public IActionResult DataJson()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// load csv files as date source
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult DataCsv()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// displaying circle points in the chart
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult CirclePoints()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// displaying a legend for the chart
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Legend()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// curved lines
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Curve()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// axis square root
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult SquareRoot()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// asix square power
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult SquarePower()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// lines generated from data array
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult LinesFromData()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// refactored into scripts
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Refactor()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// multiple lines on chart
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult MultipleLines()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// add a line to the chart
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult LineChart()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// chart basics
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Basics()
         {
             return View();
         }

@@ -1,0 +1,209 @@
+@{
+    ViewData["Title"] = "Curve";
+}
+
+        <!--
+            my d3 functions
+        -->
+        <script src="~/scripts/circle.js"></script>
+        <script src="~/scripts/rectangle.js"></script>
+        <script src="~/scripts/text.js"></script>
+        <script src="~/scripts/line.js"></script>
+
+    <script>
+
+        // core settings (1280 is wide screen, 1024 is normal) - best to go wide
+        var margin = 50, width = 1280, height = 768;
+
+        /*
+         * if there is already a chart element called 'svg' then remove it
+         * this could be adapted for id's, e.g. redrawing charts after 
+         * dynamically altered
+         */
+         d3.select("body")
+            .append("svg")
+            .remove();
+
+        /*
+         * use the <body> element
+         * add a new <svg> scalable vector graphics element
+         */
+        var dataGroup = d3.select("body")
+            .append("svg")
+            // stops labels being cut-off by '+margin'
+            .attr("width", width + margin)
+            .attr("height", height + 2 * margin)
+
+            // position the group which will store the svg with margin all around
+            .append("g")
+            .attr("transform", "translate(" + margin + ", " + margin + ")")
+
+        /*
+         * data array: multi-variant (e.g. 2nd column)
+         * - when using log scales d3.scaleLog() 
+         *   unable to have '0' as values, so use '1' as minimal
+         * - so use Square Root - NEVER EDIT THE DATA to fit a graph
+         *   e.g. d3.scaleSqrt()
+         */
+        var data = 
+        [
+            { date: "11/01/2018", value: 11, extraValue: 18, third: 14 },
+            { date: "11/02/2018", value: 23, extraValue: 29, third: 26 },
+            { date: "11/03/2018", value: 13, extraValue: 15, third: 19 },
+            { date: "11/04/2018", value: 15, extraValue: 12, third: 14.5 },
+            { date: "11/05/2018", value: 37, extraValue: 48, third: 41 },
+            { date: "11/06/2018", value: 32, extraValue: 38, third: 35 },
+            { date: "11/07/2018", value: 38, extraValue: 28, third: 32 },
+            { date: "11/08/2018", value: 42, extraValue: 34, third: 38 },
+            { date: "11/09/2018", value: 43, extraValue: 28, third: 37 },
+            { date: "11/10/2018", value: 21, extraValue: 37, third: 31 },
+            { date: "11/11/2018", value: 24, extraValue: 26, third: 25 },
+            { date: "11/12/2018", value: 50, extraValue: 43, third: 48 }
+        ];                
+
+        /*
+         * set our list of colours to use for various lines
+         * using D3 list of 10 colours, any more than that
+         * then use a new chart
+         */
+        var colours = d3.schemeCategory10;
+
+        // convert date strings to actual datetime objects
+        var parseTime = d3.timeParse("%m/%d/%Y");
+
+        // fix data array with actual dates
+        data.forEach(
+            function (d) {
+                d.date = parseTime(d.date);
+            }
+        );
+
+        /*
+         * setup our X-Axis, horizontal, using the dates
+         */
+        var x = d3.scaleTime()
+            // get the min & max values in array, e.g. oldest & newest dates
+            .domain(d3.extent(data, function (d) { return d.date; }))
+
+            // set values from left to right, min to max
+            .range([0, width])
+            ;
+        /*
+         * setup our Y-Axis, vertical, using the values
+         */
+        var y = d3.scalePow()
+
+            // get the min & max values in array, e.g. lowest & highest
+            .domain(d3.extent(data, function (d) { return d.value }))
+
+            // set values from bottom to top, min to max
+            .range([height, 0])
+
+            /*
+             * emphasize values
+             * - here 1.5 means higher values have more space
+             *   lower values are more scrunched up
+             * - change to 1 to have same gaps from slightly higher values
+             * - change to .5 to emphasize lower values and scrunch up higher values
+             */
+            .exponent(1.5)
+            ;
+
+            /*
+             * show each field in console (debugging)
+             * which can be viewed via 'inspect' in browser
+             */
+             console.log("Y Axis, Scale: Pow, Exponent: 1.5");
+
+        /*
+         * first get a list of the data fields, e.g. everything
+         * except the date
+         */
+        var dataFields = [];
+
+            // use the first row to get these
+            for (var field in data[0])
+            {
+                // don't add date field to our array
+                if (field != "date")
+                {
+                    // add each other field to array
+                    dataFields.push(field);
+                }
+
+                /*
+                 * show each field in console (debugging)
+                 * which can be viewed via 'inspect' in browser
+                 */
+                console.log("Data Field: " +field);
+            }
+
+        /*
+         * linear is normal line graph, but what if the data is units?
+         * - e.g. units, 1 or 2, not 1.5, think of TVs etc in stock
+         * - stepAfter would be if say units at start of the day
+         * - stepBefore would be units at th end of the day
+         */
+        var LineType = ["linear", "monotone", "stepAfter"];
+
+        /*
+         * now create new line chart based
+         * on each data field, with its own colour
+         * from both dataFields & colours arrays
+         */
+        for (var i = 0; i < dataFields.length; i++)
+        {
+            plotLine(dataFields[0], colours[i], LineType[i])
+        }
+
+        /*
+         * group x axis elements
+         * format time to uk
+         * generate
+         */
+        var xAxisGroup = dataGroup
+            .append("g")
+            .attr("class", "xAxisGroup")
+            .attr("transform", "translate(0," + height + ")")
+
+        var xAxis = d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%Y-%m-%d"));
+
+        xAxis(xAxisGroup);
+
+        /*
+         * group y axis elements
+         * position to left
+         * generate
+         */
+        var yAxisGroup = dataGroup
+            .append("g")
+            .attr("class", "yAxisGroup")
+
+        /*
+         * the vertical axis
+         */
+        var yAxis = d3.axisLeft(y)
+                      .tickFormat(
+                          d => y.tickFormat(
+
+                              // 62 ticks
+                              62, d3.format(
+
+                                  // include commas if necessary (e.g. 1,012)
+                                  " ,d")
+                            )
+                            (d)
+                        )
+            ;
+
+        yAxis(yAxisGroup);
+        
+    </script>
+
+    <p>
+        summary:
+        <br />- blue shows value changes then stays horizontal
+        <br />- curve shows trend (basis never hits points, cardinal overshoots, monotoneX is best)
+        <br />- green shows direct travel as a line
+    </p>

@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Data JSON file";
+    ViewData["Title"] = "Data CSV";
 }
 
         <!--
@@ -12,7 +12,7 @@
     <script src="~/scripts/legend.js"></script>
     <script src="~/scripts/circle_v2.js"></script>
 
-<script>
+   <script>
 
         /*
                  * data array: multi-variant (e.g. 2nd column)
@@ -23,8 +23,14 @@
                  */
 
 
-        d3.json("../data/data.json")
-          .then(result => buildChart(result));
+        d3.csv("../data/data.csv", function (d) {
+            return {
+                date: d.date, // date stored in file not in quotations
+                value: +d.value, // convert to number
+                extraValue: +d.extraValue, // convert to number
+                third: +d.third, // convert to number
+            };
+        }).then(result => buildChart(result));
 
         function buildChart(fileData) {
 
@@ -153,11 +159,8 @@
              * on each data field, with its own colour
              * from both dataFields & colours arrays
              */
-            for (var i = 0; i < dataFields.length; i++) 
-            {
-                // put the points of the line in place
+            for (var i = 0; i < dataFields.length; i++) {
                 var line = plotLine(dataFields[i], colours[i], LineType[i], dataGroup, data, x, y)
-
                 /*
                   * the appearance
                   */
@@ -183,7 +186,7 @@
 
             /*
              * the horizontal axis
-             * - ticks are lines between values
+             * - ticks are spaces between values
              */
             var xAxis = d3.axisBottom(x)
                 .tickFormat(
@@ -215,14 +218,14 @@
 
             /*
              * the vertical axis
-             * - the ticks are the lines between values
+             * - the ticks are the spaces between values
              */
             var yAxis = d3.axisLeft(y)
                 .tickFormat(
                     d => y.tickFormat(
 
-                        // 0 ticks here
-                        0, d3.format(
+                        // 62 ticks
+                        62, d3.format(
 
                             // include commas if necessary (e.g. 1,012)
                             " ,d")
@@ -236,16 +239,7 @@
             /*
              * show grid lines, y (vertical), x (horizontal) or both
              */
-            drawGridlines(
-                dataGroup,              // add to svg group
-                (maxValue / 2),         // lines on Y (vertical)
-                (columns * 2),          // lines on X (horizontal)
-                "both",                 // show lines, x, y, both?
-                y,                      // y axis
-                x,                      // x axis
-                width,                  // chart width
-                height                  // chart height
-            );
+            drawGridlines(dataGroup, (maxValue / 2), (columns * 2), "both", y, x, width, height);
 
             /*
              * now show the legend, using data fields excluding date
@@ -253,9 +247,6 @@
              */
             drawLegend(dataFields, dataGroup, 12, 100, 100);
 
-            /*
-             * show circles at the points of the values
-             */
             drawCirclePoints(dataFields, dataGroup, 10, data, x, y);
         }
     </script>
@@ -265,6 +256,6 @@
         <br />- blue shows direct travel as a line
         <br />- orange shows trend
     </p>
-    <p>
-        data from <b>wwwroot/data/data.json</b>
+        <p>
+        data from <b>wwwroot/data/data.csv</b>
     </p>
