@@ -131,5 +131,23 @@ namespace webapp.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        ///  get data from json api
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult DataApi()
+        {
+            return View();
+        }
+
+        /// <summary>
+        ///  get data from json api
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult RandomDataApi()
+        {
+            return View();
+        }
     }
 }
