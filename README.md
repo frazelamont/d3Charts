@@ -7,7 +7,7 @@ install dotnetcore
 
 go into src/webapp
 
-type dotnet run, click browser link and browse charts
+type 'dotnet run', click browser link and browse charts
 
 - all code is in the views (pages source)
 
