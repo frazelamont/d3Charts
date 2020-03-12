@@ -55,5 +55,4 @@ namespace webapp.Models
             third = rand.Next(12, 50);
         }
     }
-    //
 }
