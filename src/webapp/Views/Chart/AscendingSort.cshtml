@@ -1,5 +1,5 @@
 @{
-    ViewData["Title"] = "Data Merge";
+    ViewData["Title"] = "Data sorting";
 }
 
 
@@ -25,16 +25,21 @@
                  */
 
 
-        d3.json("https://localhost:5001/api/data/jsondata")
-          .then(result => buildChart(result))
+        d3.json("https://localhost:5001/api/data/RandomJson")
+          .then(result => renderSortedData(result))
         ;
 
-        var interval = d3.interval(
-                            //d3.select("svg").remove(),
-                            X=> d3.json("https://localhost:5001/api/data/jsondata")
-                                  .then(result => buildChart(result)),
-                                  1000 /// 1 second
-                        );  
+        function renderSortedData(result)
+        {
+            result = result.sort(
+                function(a,b)
+                {
+                    return a-b;
+                }
+            );
+
+            buildChart(result);
+        }
 
         function buildChart(fileData) 
         {
@@ -51,9 +56,10 @@
              * this could be adapted for id's, e.g. redrawing charts after 
              * dynamically altered
              */
-            d3.select("body")
-                .append("svg")
-                .remove();
+            var svg = d3.select("body")
+                        .append("svg")
+            
+            svg.remove();
 
             /*
              * use the <body> element
@@ -68,7 +74,14 @@
                 // position the group which will store the svg with margin all around
                 .append("g")
                 .attr("transform", "translate(" + margin + ", " + margin + ")")
-                ;
+
+            var onZoom = d3.zoom("zoom", zoomFunction);
+                onZoom(dataGroup);
+
+            function zoomFunction()
+            {
+                dataGroup.attr("transform", d3.event.transform);
+            }
 
             /*
              * set our list of colours to use for various lines
@@ -277,5 +290,6 @@
         <br />- orange shows trend
     </p>
     <p>
-        this is broken, adds a new chart every time, needs to remove existing
+        sorts data in ascending order, compare with descending chart, same data, different sort. 
+        <br />the random json api chart is the same data without any sorting
     </p>

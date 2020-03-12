@@ -149,5 +149,32 @@ namespace webapp.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        ///  zoom to canvas
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Zoom()
+        {
+            return View();
+        }
+
+        /// <summary>
+        ///  data sorting
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult DescendingSort()
+        {
+            return View();
+        }
+
+        /// <summary>
+        ///  data sorting
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult AscendingSort()
+        {
+            return View();
+        }
     }
 }
