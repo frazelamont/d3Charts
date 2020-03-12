@@ -42,18 +42,18 @@ namespace webapp.Controllers
         public JsonResult RandomJson()
         {
             List<ChartData> data = new List<ChartData>();
-            data.Add(new ChartData(new DateTime(2019,1,4)));
-            data.Add(new ChartData(new DateTime(2019,3,4)));
+            data.Add(new ChartData(new DateTime(2019,4,1)));
+            data.Add(new ChartData(new DateTime(2019,4,3)));
             data.Add(new ChartData(new DateTime(2019,4,4)));
-            data.Add(new ChartData(new DateTime(2019,5,4)));
-            data.Add(new ChartData(new DateTime(2019,6,4)));
-            data.Add(new ChartData(new DateTime(2019,7,4)));
-            data.Add(new ChartData(new DateTime(2019,8,4)));
-            data.Add(new ChartData(new DateTime(2019,9,4)));
-            data.Add(new ChartData(new DateTime(2019,10,4)));
-            data.Add(new ChartData(new DateTime(2019,11,4)));
-            data.Add(new ChartData(new DateTime(2019,12,4)));
-            
+            data.Add(new ChartData(new DateTime(2019,4,5)));
+            data.Add(new ChartData(new DateTime(2019,4,6)));
+            data.Add(new ChartData(new DateTime(2019,4,7)));
+            data.Add(new ChartData(new DateTime(2019,4,8)));
+            data.Add(new ChartData(new DateTime(2019,4,9)));
+            data.Add(new ChartData(new DateTime(2019,4,10)));
+            data.Add(new ChartData(new DateTime(2019,4,11)));
+            data.Add(new ChartData(new DateTime(2019,4,12)));
+
             return new JsonResult(data.ToArray());
         }
     }

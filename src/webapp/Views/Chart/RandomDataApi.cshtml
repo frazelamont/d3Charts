@@ -100,7 +100,7 @@
             /*
              * setup our Y-Axis, vertical, using the values
              */
-            var y = d3.scalePow()
+            var y = d3.scaleSqrt()
 
                 // get the min & max values in array, e.g. lowest & highest
                 .domain(d3.extent(data, function (d) { return d.value }))
