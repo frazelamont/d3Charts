@@ -12,6 +12,7 @@ function drawCirclePoints(fields, group, radius, data, x, y) {
       // every data value field
       for (var i = 0; i < fields.length; i++) {
         group
+          //.enter()
           .append("circle")
           .attr("fill", d3.schemeCategory10[i])               // should be same colour as line
           .attr("r", radius)                                       // radius
@@ -25,6 +26,9 @@ function drawCirclePoints(fields, group, radius, data, x, y) {
             ": " +
             point[fields[i]]                            // alt text - value of field
           )
+          //.merge(data)
+          .transition()
+          .duration(1000)
           ;
       }
     });
