@@ -16,15 +16,6 @@ namespace webapp.Controllers
         }
 
         /// <summary>
-        /// using d3 merge functions for data
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult DataMerge()
-        {
-            return View();
-        }
-
-        /// <summary>
         /// load json file as data source
         /// </summary>
         /// <returns></returns>
@@ -146,6 +137,15 @@ namespace webapp.Controllers
         /// </summary>
         /// <returns></returns>
         public IActionResult RandomDataApi()
+        {
+            return View();
+        }
+
+        /// <summary>
+        ///  data merge from json api
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult DataMerge()
         {
             return View();
         }
