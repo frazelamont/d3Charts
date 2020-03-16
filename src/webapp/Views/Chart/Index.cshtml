@@ -1,45 +1,18 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+
+    List<TileModel> tiles = new List<TileModel>();
+
+    if (ViewBag.Tiles != null)
+    {
+      tiles = ViewBag.Tiles;
+    }
 }
 
 <div>
   these are the test page charts
   <ul>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="Basics">
-        chart basics
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="LineChart">
-        line chart
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="MultipleLines">
-        multiple lines
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="Refactor">
-        refactored for reuse 
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="LinesFromData">
-        Line generation from data array
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="SquarePower">
-        Y axis (vertical) scaled power 
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="SquareRoot">
-        Y axis (vertical) Square root 
-      </a>
-    </li>
+
     <li>
       <a class="nav-link text-dark" asp-controller="Chart" asp-action="Curve">
         Interprolation Curve
@@ -96,4 +69,70 @@
       </a>
     </li>
   </ul>
+</div>
+
+<div class="card-deck">
+  <div class="card-columns">
+@foreach(var tile in tiles)
+{
+      <div class="card">
+      <!--
+        <img class="card-img-top" src="..." alt="Card image cap">
+        -->
+      <div class="card-header">
+        <h4>@tile.Title</h4>
+      </div>
+      <div class="card-body">
+        <!--
+          <h5 class="card-title">
+            Card title
+          </h5>
+          -->
+        <!--
+          <h6 class="card-title">
+            Description
+          </h6>
+          -->
+        <p class="card-text">
+          @tile.Description
+        </p>
+        @*
+        <!--
+          <h6 class="card-title">Elements</h6>
+          -->  
+              <div class="list-group">
+
+                <a  href="#" 
+                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-primary disabled">
+                    Stylesheets
+                    <span class="badge badge-primary badge-pill">
+                      3 files
+                    </span>
+                </a>
+                <a  href="#" 
+                    class="list-group-item d-flex justify-content-between align-items-center list-group-item-action list-group-item-primary disabled">
+                    Scripts
+                    <span class="badge badge-primary badge-pill">
+                      7 files
+                    </span>
+                </a>              
+
+              </div>
+        *@
+      </div>
+      
+      <div class="card-footer">
+
+        <a href="@tile.Link" 
+           class="btn btn-success btn-sm">
+           View Chart
+        </a>
+        <!--
+          <small class="text-muted">Real basic example</small>
+          -->
+
+      </div>
+    </div>
+}
+  </div>
 </div>

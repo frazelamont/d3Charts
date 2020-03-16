@@ -1,8 +1,6 @@
 @{
     ViewData["Title"] = "Data sorting";
 }
-
-
         <!--
                 my d3 functions
         -->
@@ -13,7 +11,6 @@
     <script src="~/scripts/legend.js"></script>
     <script src="~/scripts/circle_v2.js"></script>
 
-
        <script>
 
         /*
@@ -23,7 +20,6 @@
                  * - so use Square Root - NEVER EDIT THE DATA to fit a graph
                  *   e.g. d3.scaleSqrt()
                  */
-
 
         d3.json("https://localhost:5001/api/data/JsonData")
           .then(result => renderSortedData(result))

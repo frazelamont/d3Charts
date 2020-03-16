@@ -10,8 +10,68 @@ namespace webapp.Controllers
 {
     public class ChartController : Controller
     {
+        /// <summary>
+        /// list the charts
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Index()
         {
+            List<TileModel> tiles = new List<TileModel>();
+            
+            tiles.Add(
+                new TileModel(
+                    "Chart basics",             // title 
+                    "/chart/basics",            // link
+                    
+                    // description
+                    "positioning, chart core"   
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Line chart", 
+                    "/chart/linechart",
+                    "add lines to chart through code"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Multiple lines", 
+                    "/chart/multiplelines",
+                    "show multiple lines on chart"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Refactored", 
+                    "/chart/refactor",
+                    "move js code into files"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Line generation from data array", 
+                    "/chart/LinesFromData",
+                    "data generates line, not manual code"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "vertical scaling", 
+                    "/chart/SquarePower",
+                    "scaled Y axis"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "square root scaling", 
+                    "/chart/SquareRoot",
+                    "scaled Y axis"
+                    )
+                );
+
+            ViewBag.Tiles = tiles;
+
             return View();
         }
 

@@ -8,7 +8,7 @@ using webapp.Models;
 
 namespace webapp.Models
 {
-    public class ChartData
+    public class ChartDataModel
     {
         private DateTime dated { get; set; }
         public string date
@@ -29,7 +29,7 @@ namespace webapp.Models
         /// <param name="_value"></param>
         /// <param name="_extraValue"></param>
         /// <param name="_third"></param>
-        public ChartData(
+        public ChartDataModel(
             DateTime _date, int _value, int _extraValue, int _third
         )
         {
@@ -43,7 +43,7 @@ namespace webapp.Models
         /// generate random values
         /// </summary>
         /// <param name="_date"></param>
-        public ChartData(
+        public ChartDataModel(
             DateTime _date
         )
         {
