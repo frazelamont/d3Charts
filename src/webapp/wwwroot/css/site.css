@@ -13,9 +13,6 @@ html {
   font-size: 14px;
   font-family: sans-serif; 
 }
-  .card-columns {
-    column-count: 3;
-  }
 
 .border-top {
   border-top: 1px solid #e5e5e5;

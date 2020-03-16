@@ -50,7 +50,7 @@ namespace webapp.Controllers
                 );
             tiles.Add(
                 new TileModel(
-                    "Line generation from data array", 
+                    "Data line generation", 
                     "/chart/LinesFromData",
                     "data generates line, not manual code"
                     )
@@ -69,7 +69,50 @@ namespace webapp.Controllers
                     "scaled Y axis"
                     )
                 );
+            tiles.Add(
+                new TileModel(
+                    "Interprolation Curve", 
+                    "/chart/Curve",
+                    "curved line for trending data"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Legend", 
+                    "/chart/Legend",
+                    "what parts of the chart are"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Circle points", 
+                    "/chart/CirclePoints",
+                    "mark the data points with circles you can see and click on"
+                    )
+                );
 
+            tiles.Add(
+                new TileModel(
+                    "CSV data file", 
+                    "/chart/DataCsv",
+                    "csv data source powers function which generates lines"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "JSON data file", 
+                    "/chart/DataJson",
+                    "json data source powers function which generates lines"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "JSON Api", 
+                    "/chart/DataApi",
+                    "json data api for chart generation "
+                    )
+                );
+            
             ViewBag.Tiles = tiles;
 
             return View();
