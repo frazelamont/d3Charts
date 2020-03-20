@@ -9,38 +9,6 @@
     }
 }
 
-<div>
-  these are the test page charts
-  <ul>
-
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="RandomDataApi">
-        random json data from api
-      </a>
-    </li>
-        <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="DataMerge">
-        data merge 
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="Zoom">
-        zoom
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="DescendingSort">
-        descending data sort
-      </a>
-    </li>
-    <li>
-      <a class="nav-link text-dark" asp-controller="Chart" asp-action="AscendingSort">
-        ascending data sort
-      </a>
-    </li>
-  </ul>
-</div>
-
 <div class="card-deck">
   <div class="card-columns">
 @foreach(var tile in tiles)
@@ -96,11 +64,8 @@
         <a href="@tile.Link" 
            class="btn btn-success btn-sm">
            View Chart
-        </a>
-        <!--
-          <small class="text-muted">Real basic example</small>
-          -->
-
+        </a>        
+        <small class="text-muted">Real basic example</small>        
       </div>
     </div>
 }

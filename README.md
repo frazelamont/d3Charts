@@ -2,8 +2,11 @@
 
 learning D3 via tutorials, storing comments
 
-# how to use
+## how to use
+
 install dotnetcore
+
+- https://dotnet.microsoft.com/download/dotnet-core/current/runtime
 
 go into src/webapp
 

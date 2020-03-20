@@ -62,34 +62,6 @@ namespace webapp.Controllers
                     "scaled Y axis"
                     )
                 );
-            tiles.Add(
-                new TileModel(
-                    "square root scaling", 
-                    "/chart/SquareRoot",
-                    "scaled Y axis"
-                    )
-                );
-            tiles.Add(
-                new TileModel(
-                    "Interprolation Curve", 
-                    "/chart/Curve",
-                    "curved line for trending data"
-                    )
-                );
-            tiles.Add(
-                new TileModel(
-                    "Legend", 
-                    "/chart/Legend",
-                    "what parts of the chart are"
-                    )
-                );
-            tiles.Add(
-                new TileModel(
-                    "Circle points", 
-                    "/chart/CirclePoints",
-                    "mark the data points with circles you can see and click on"
-                    )
-                );
 
             tiles.Add(
                 new TileModel(
@@ -107,9 +79,72 @@ namespace webapp.Controllers
                 );
             tiles.Add(
                 new TileModel(
+                    "Legend", 
+                    "/chart/Legend",
+                    "what parts of the chart are"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "square root scaling", 
+                    "/chart/SquareRoot",
+                    "scaled Y axis"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Interprolation Curve", 
+                    "/chart/Curve",
+                    "curved line for trending data"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "Circle points", 
+                    "/chart/CirclePoints",
+                    "mark the data points with circles you can see and click on"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
                     "JSON Api", 
                     "/chart/DataApi",
                     "json data api for chart generation "
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "random json data from api", 
+                    "/chart/RandomDataApi",
+                    "refresh for new data"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "ascending data sort", 
+                    "/chart/AscendingSort",
+                    "sorts data in ascending order"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "descending data sort", 
+                    "/chart/DescendingSort",
+                    "*this is broken*"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "zoom", 
+                    "/chart/Zoom",
+                    "*this is broken*"
+                    )
+                );
+            tiles.Add(
+                new TileModel(
+                    "data merge", 
+                    "/chart/DataMerge",
+                    "*this is broken*"
                     )
                 );
             
