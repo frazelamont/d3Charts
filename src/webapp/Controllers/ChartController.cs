@@ -146,6 +146,13 @@ namespace webapp.Controllers
                     "/chart/DataMerge",
                     "*this is broken*"
                     )
+                );            
+            tiles.Add(
+                new TileModel(
+                    "basic line", 
+                    "/chart/BasicLine",
+                    "basic d3 usage"
+                    )
                 );
             
             ViewBag.Tiles = tiles;
@@ -314,5 +321,13 @@ namespace webapp.Controllers
         {
             return View();
         }
+
+        ///
+        /// basic line in d3
+        ///
+        public IActionResult BasicLine()
+        {
+            return View();
+        }        
     }
 }

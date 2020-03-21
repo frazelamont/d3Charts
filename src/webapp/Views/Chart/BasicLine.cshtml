@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "basic line";
+}
+
+<div id="chartDiv">
+</div>
+
+<script>
+
+    /*
+     * get an element by the id #ID
+     * then store in variable
+     */
+    const svg = d3.select("#chartDiv")
+                  .append("svg")
+                  .attr("width", 500)
+                  .attr("height", 400)
+    ;
+
+    // now put a box 100 in from left, 100 down from top
+    const box = svg.append("g")
+                   .attr("transform", "translate(100, 100)")
+    ;
+
+    // add a line 200 in from left
+    box.append("line")
+       .attr("x2", 200)                     // length
+       .style("stroke", "black")            // colour
+    ;
+
+    // add a circle in middle of the line
+    box.append("circle")
+       .attr("cx", 100)                     // circle position
+       .attr("r", 3)                        // radius
+    ;
+
+    // add a circle at end of the line
+    box.append("circle")
+       .attr("cx", 200)                     // circle position
+       .attr("r", 5)                        // radius
+    ;
+
+    // add text above line
+    box.append("text")
+       .attr("y", -10)                      // position above line (-), otherwise below line
+       .attr("x", 25)                       // position 1/4 way along line from left
+       .text("line with two dots")          // text to display
+    ;
+
+</script>
