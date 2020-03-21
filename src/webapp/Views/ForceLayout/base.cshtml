@@ -1,0 +1,210 @@
+@{
+    ViewData["Title"] = "base force layout graph";
+}
+
+<script>
+        var nodes = [
+        
+            { "name": "Barclays", "nodeType": "A" },
+            { "name": "Lloyds", "nodeType": "A" },
+            { "name": "RBoS", "nodeType": "A" },
+            { "name": "BoS", "nodeType": "A" },
+            { "name": "Halifax", "nodeType": "A" },
+            { "name": "Santander", "nodeType": "A" },
+            { "name": "TSB", "nodeType": "A" },
+            { "name": "NatWest", "nodeType": "A" },
+            { "name": "Tesco", "nodeType": "A" },
+            { "name": "Sainsbury's", "nodeType": "A" },
+            { "name": "M&S", "nodeType": "A" },
+            { "name": "Monzo", "nodeType": "A" },
+            { "name": "HSBC", "nodeType": "A" },
+        
+            { "name": "Investment", "nodeType": "M", "program": "Mercury" },
+            { "name": "Retail", "nodeType": "M", "program": "Mercury" },
+            { "name": "Insurance", "nodeType": "M", "program": "Mercury" },
+            { "name": "Asset Mgmt", "nodeType": "M", "program": "Mercury" },
+
+            { "name": "Financial", "nodeType": "Z", "program": "Sector" }
+        ];
+
+        var links = [
+        
+            { "source": "Investment", "target": "Barclays" },
+            { "source": "Investment", "target": "HSBC" },
+            { "source": "Investment", "target": "NatWest" },
+        
+            { "source": "Retail", "target": "Lloyds" },
+            { "source": "Retail", "target": "Monzo" },
+            { "source": "Retail", "target": "M&S" },
+            { "source": "Retail", "target": "Sainsbury's" },
+            { "source": "Retail", "target": "Tesco" },
+            { "source": "Retail", "target": "TSB" },
+            { "source": "Retail", "target": "Santander" },
+            { "source": "Retail", "target": "Halifax" },
+            { "source": "Retail", "target": "BoS" },
+            { "source": "Retail", "target": "RBoS" },
+        
+            { "source": "Financial", "target": "Asset Mgmt" },
+            { "source": "Financial", "target": "Insurance" },
+            { "source": "Financial", "target": "Investment" },
+            { "source": "Financial", "target": "Retail" }
+        ];
+
+        var width = 750;
+        var height = 750;
+
+        const svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var g = svg.append("g");
+
+        var simulation = d3.forceSimulation().nodes(nodes);
+
+        // set up the forces
+
+        // - the link using source
+        var link = d3.forceLink(links).id(function (d) { return d.name; }).distance(200).strength(1);
+
+        // causes all elements to attract or repel one another
+        // a positive value will cause elements to attract one another while a negative value causes elements to repel each other
+        var charge = d3.forceManyBody().strength(-50);  // negative gravity for more spacing (high number)
+
+        // centering your elements as a whole about a center point
+        var center = d3.forceCenter(width / 2, height / 2);  // center gravity and show in middle of page
+
+        // used to stop elements overlapping
+        var collision = d3.forceCollide().radius(function(d) { return 55; }); // return d.radius; });
+
+        // comment out to show wide vertical
+        // make .50 to scrunch up in 1 column vertically
+        var forceX = d3.forceX().x(function(d) { return width / 2; }).strength(.5);  
+
+        // comment out to make horizontal
+        var forceY = d3.forceY().y(function(d) { return height / 2; }).strength(.5);  // male .50 to scrunch up in 1 row
+
+       // var radial = d3.forceRadial(function(d) { return -200; });
+
+        // apply the forces
+        simulation
+            .force("link", link)
+            .force("charge", charge)
+            .force("center", center)
+            .force("collision", collision)
+            //.force("radial", radial)
+            .force("forceX", forceX)  // comment out to show wide vertical
+            .force("forceY", forceY)  // comment out to make horizontal
+            ;
+
+        //add tick instructions:
+        simulation.on("tick", simulation_tick);
+
+        var link = g
+            .selectAll("line")
+            .data(links)                // data for lines, link two elements
+            .enter()
+            .append("line")             
+            .attr("stroke-width", 2)
+            .attr("stroke", "#ddd");
+
+        //group the nodes together for easier ticking
+        var node = g.selectAll("g")
+            .data(nodes)
+            .enter()
+            .append("g")
+            .attr("class", "node")      // data for actual elements / nodes
+
+            // should nodes be draggable? 
+            .call(d3.drag()
+                .on("start", dragStart)
+                .on("drag", dragDone)
+            );
+
+        // add the node circle with the specific colors and radius
+        // - 3 parts
+
+        // 1 - the actual circle base
+        node
+            .append("circle")
+            .attr("r", radius)
+            .attr("fill", fillColor);
+
+        // 2 - set size of circle dependant on node value
+        function radius(d) {
+            if (d.nodeType == "A") {
+                return 40;
+            } else {
+                if (d.program == "Mercury") {
+                    return 50;
+                }
+                else {
+                    return 60;
+                }
+            }
+        }
+
+        // 3 - set circle colour dependant upon node value
+        function fillColor(d) {
+            if (d.nodeType == "A") {
+                return "#FC3D21";
+            } else {
+                 if (d.program == "Mercury") {
+                    return "#0B3D91";
+                } 
+                else {
+                     return "#088A08";
+                }
+               
+            }
+        }
+
+        // add the name label
+        node
+            .append("text")
+            .attr("font-family", "Arial")
+            .attr("font-size", "12pt")
+            .attr("dx", "-15")
+
+            // white text with black outline, accessible on all canvases and resolutions
+            .attr("style", "fill:white;fill-opacity:1;stroke:#444444;stroke-width:.5px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;")
+            .text(function (d) { return d.name });
+
+        // attach the zoom handler
+        var zoom_handler = d3.zoom()
+            .on("zoom", zoom_actions);
+
+        zoom_handler(svg);
+
+        //Zoom functions
+        function zoom_actions() {
+            g.attr("transform", d3.event.transform)
+        }
+
+        function dragStart(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragDone(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function simulation_tick() {
+            link
+                // link source node
+                .attr("x1", function (d) { return d.source.x; })
+                .attr("y1", function (d) { return d.source.y; })
+
+                // link target node
+                .attr("x2", function (d) { return d.target.x; })
+                .attr("y2", function (d) { return d.target.y; });
+
+            // remember its a g element, which has no x & y co-ords, so we need to set that to 
+            // where it should be with all elements
+            node
+                .attr("transform", function (d) { return "translate(" + d.x + ", " + d.y + ")"; });
+        }
+    </script>
