@@ -1,0 +1,99 @@
+@{
+    ViewData["Title"] = "movies & structure";
+}
+
+<script src="~/scripts/build_v2.js"></script>
+
+<div id="chartDiv">
+</div>
+
+<script>
+
+/*
+ * to filter the data after 2001 year
+ */
+function filterData(data){
+    return data.filter(d => {
+        return( 
+            d.release_year > 2001 &&      // after 2001
+            d.title
+        );
+    });
+}
+
+/*
+ * convert fields in csv to js objects
+ */
+function csvConvert(d){
+     return {
+                id: +d.id,                          // + means convert to number
+                title: d.title,                     // default, keep as string
+                release_year: +d.release_year,      // year as number (not date in csv)
+                genre: d.genre,
+                runtime: +d.runtime,                // minutes as number
+                budget: +d.budget,
+                revenue: +d.revenue
+            };
+}
+
+/*
+ * once data is loaded, run a few tasks, like c++ main()
+ */
+function dataLoaded(loadedData){
+    
+    console.log("pre filter: ", loadedData);
+    const cleanData = filterData(loadedData);
+    console.log("filtered: ", cleanData);
+
+    buildChart(
+        cleanData, 
+        "bar"
+    );
+}
+
+/* CSV file */
+        d3.csv("../data/harry_potter.csv", csvConvert)
+          .then(result => {
+              dataLoaded(result)     
+          })
+        ;
+
+
+/* JSON file
+        d3.json("../data/harry_potter.json", function (d){})
+          .then(
+              result => buildChart(
+                            result, "bar"
+                        )              
+            );
+*/
+
+/* 
+ * Multiple files or links, 
+ * same fields required is idea, 
+ * creates 2 arrays 
+ 
+    const potter = d3.csv("../data/harry_potter.csv");
+    const rings = d3.csv("../data/lord_of_the_rings.csv");
+
+    Promise.all(
+                [potter, rings]
+            )
+            .then( results =>
+              console.log('Multiple requests: ', results);
+              console.log('Multiple requests concat: ', [...results[0], ...results[1]]);           
+            );
+*/
+    /*
+     * get an element by the id #ID
+     * then store in variable
+     
+    const svg = d3.select("#chartDiv")
+                  .append("svg")
+                  .attr("width", 500)
+                  .attr("height", 400)
+    ;*/
+
+    //
+
+</script>
