@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "basic pie chart";
+}
+
+<script>
+    // should be via an api or similar
+            var data = [
+                { percent: 80, label: "% which looks like Pacman" },
+                { percent: 20, label: "% which doesn't" }
+            ];
+
+    // basic settings
+            var width = 800,
+                height = 800,
+                radius = width / 2;
+
+    // sets the actual chart area
+            var pieArc = d3.arc()
+                .outerRadius(radius)
+                .innerRadius(0);      // give greater than 0 to show ring doughnut style 'radius * .6'
+
+    // the labels are separate remember
+            var labelArc = d3.arc()
+                .outerRadius(radius)
+                .innerRadius(0);
+
+    // add data to the chart
+            var pie = d3.pie()
+                .value(x => x.percent);
+
+    // actually draw the canvas
+            var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ") rotate(125)");
+
+    // add the chart to the canvas & link with data
+            var g = svg.selectAll("g")
+                .data(pie(data))
+                .enter()
+                .append("g")
+
+    // set colours
+            g.append("path")
+                .attr("d", pieArc)
+                .style("fill", x => x.data.percent == 80 ? "yellow" : "black")
+
+    // rotate it, otherwise set rotate to have (0) and look at results
+            g.append("text")
+                .attr("transform", x => "translate(" + labelArc.centroid(x) + ") rotate(-125)")
+                .attr("fill", "red")
+                .text(function (d) { return d.data.label; });
+        </script>
