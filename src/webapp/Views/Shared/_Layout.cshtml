@@ -70,7 +70,15 @@
                                 asp-area="" 
                                 asp-controller="ForceLayout" 
                                 asp-action="Index">
-                                Force Layout Graph
+                                Force Layouts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a  class="nav-link text-dark" 
+                                asp-area="" 
+                                asp-controller="BarChart" 
+                                asp-action="Index">
+                                Bar Charts
                             </a>
                         </li>
                     </ul>
@@ -109,7 +117,7 @@
                 integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
         </script>
     </environment>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 
     @RenderSection("Scripts", required: false)
 </body>
