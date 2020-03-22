@@ -12,7 +12,8 @@
 /*
  * to filter the data after 2001 year
  */
-function filterData(data){
+function filterData(data)
+{
     return data.filter(d => {
         return( 
             d.release_year > 2001 &&      // after 2001
@@ -22,9 +23,46 @@ function filterData(data){
 }
 
 /*
+ * prepare data for chart, reduce fields and
+ * provide a key
+ *
+ * http://devdocs.io
+ */
+function prepareBarChartData(data) 
+{
+  // group the data by title
+  const dataMap = d3.nest()
+
+                        // grouped by is the key, can have multiple
+                        .key(function(d){
+                                    return d.title; 
+                                })
+
+                        // collate the values of the revenue here to one big number
+                        // more useful when grouped by say genre
+                        .rollup(function(leaves){
+                                    return d3.sum(leaves, function(d){
+                                        return d.revenue;
+                                    }) //;
+                                })
+
+                        // the data to use
+                        .entries(data)
+                    ;
+
+    // DEBUG
+    console.log("dataMap", dataMap);
+
+    //debugger;  // uncomment this line to effectively pause at this point (useful js debug line)
+
+  return dataMap;
+}
+
+/*
  * convert fields in csv to js objects
  */
-function csvConvert(d){
+function csvConvert(d)
+{
      return {
                 id: +d.id,                          // + means convert to number
                 title: d.title,                     // default, keep as string
@@ -39,14 +77,30 @@ function csvConvert(d){
 /*
  * once data is loaded, run a few tasks, like c++ main()
  */
-function dataLoaded(loadedData){
-    
+function dataLoaded(loadedData)
+{    
     console.log("pre filter: ", loadedData);
-    const cleanData = filterData(loadedData);
+    var cleanData = filterData(loadedData);
     console.log("filtered: ", cleanData);
 
+    // get data with just two columns (title, revenue)
+    var barChartData = prepareBarChartData(cleanData);
+
+    // now sort into descending order by revenue/value
+    var sortedData = barChartData.sort(
+                        function(a, b){ 
+                            return d3.descending(
+                                a["value"], 
+                                b["value"]
+                            ); 
+                        }
+                    );
+
+    // DEBUG
+    console.log("sortedData", sortedData);
+
     buildChart(
-        cleanData, 
+        sortedData, 
         "bar"
     );
 }
@@ -97,3 +151,10 @@ function dataLoaded(loadedData){
     //
 
 </script>
+
+<div>
+    this uses a csv, smooths the data, also has json data in comments<br />
+    - separate into csv data with conversion<br />
+    - json data &amp; combining<br />
+    - data filtering
+</div>
