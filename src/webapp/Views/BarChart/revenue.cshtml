@@ -2,7 +2,7 @@
     ViewData["Title"] = "movies & structure";
 }
 
-<script src="~/scripts/build_v2.js"></script>
+<script src="~/scripts/buildbar.js"></script>
 
 <div id="chartDiv">
 </div>
@@ -102,8 +102,7 @@ function dataLoaded(loadedData)
     //debugger; 
 
     buildChart(
-        sortedData, 
-        "bar"
+        sortedData
     );
 }
 
