@@ -16,11 +16,21 @@ namespace webapp.Controllers
 
             tiles.Add(
                 new TileModel(
-                    "movie data",             // title 
+                    "data prep",             // title 
                     "/barChart/movies",       // link
 
                     // description
-                    "movie data from csv in bar chart"
+                    "csv data load, conversion, filtering & preparation"
+                    )
+                );
+
+            tiles.Add(
+                new TileModel(
+                    "bar chart revenue",             // title 
+                    "/barChart/revenue",       // link
+
+                    // description
+                    "show data prep in bar chart"
                     )
                 );
 
@@ -29,7 +39,20 @@ namespace webapp.Controllers
             return View();
         }
 
+        /// <summary>
+        /// data preparation
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Movies()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// bar chart for revenue
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Revenue()
         {
             return View();
         }
