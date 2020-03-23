@@ -15,8 +15,7 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
     </environment>
-    <link rel="stylesheet" href="~/css/site.css" />
-
+    
            <!--
             D3 Data Driven Documents - minified base library
         -->
@@ -25,7 +24,8 @@
         <!--
             my css styles
         -->
-        <link rel="stylesheet" href="~/styles/test.css" />
+        <link rel="stylesheet" href="~/styles/charts.css" />
+        <link rel="stylesheet" href="~/styles/app.css" />
 </head>
 <body>
     <header>
@@ -88,9 +88,9 @@
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
+        @*<main role="main" class="pb-3">*@
             @RenderBody()
-        </main>
+        @*</main>*@
     </div>
 
     <footer class="border-top footer text-muted">
