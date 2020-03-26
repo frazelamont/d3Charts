@@ -72,34 +72,13 @@ function prepareBarChartData(data)
                         // the data to use
                         .entries(data)
                     ;
-//debugger;
-    // group the data by title
-    var datesMap = d3.nest()
-
-                        // grouped by is the key, can have multiple
-                        .key(function(d){
-                                    return d.release_year; 
-                                })
-
-                        // collate the values of the revenue here to one big number
-                        // more useful when grouped by say genre
-                        .rollup(function(leaves){
-                                    return d3.sum(leaves, function(d){
-                                        return d.release_year;
-                                    }) //;
-                                })
-
-                        // the data to use
-                        .entries(data)
-                    ;
 
     //debugger;
 
     // Convert rolled up maps to to arrays.
     var revenue = Array.from(revenueMap).sort((a, b) => a[0] - b[0]);
     var budget = Array.from(budgetMap).sort((a, b) => a[0] - b[0]);
-    var dates = Array.from(datesMap);
-
+    
     // DEBUG
     console.log("revenue", revenue);
     console.log("budget", budget);
@@ -109,21 +88,27 @@ function prepareBarChartData(data)
         ...Array.from(revenueMap.values()),
         ...Array.from(budgetMap.values()),
     ];
-    var yMax = d3.max(yValues);
 
     // DEBUG
     console.log("yValues", yValues);
-    console.log("yMax", yMax);
 
     // Produce final data object.
   var lineData = {
-    revenueData: revenue,
-    budgetData: budget,
-    dates: dates,
-    yMax: yMax,
-    movieData : data,
+      series: [
+      {
+        name: 'revenue',
+        colour: 'dodgerblue',
+        values: revenue,
+      },
+      {
+        name: 'budget',
+        colour: 'darkorange',
+        values: budget,
+      },
+    ],
     allData : yValues
   };
+  
 
     // DEBUG
     console.log("lineData", lineData);

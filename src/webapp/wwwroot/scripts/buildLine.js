@@ -4,7 +4,7 @@ function buildChart(fileData)
     //console.log(fileData);
 
     // set the margin from the SVG canvas to the chart area itself
-    var margin = { top: 60, right: 40, bottom: 60, left: 140 };
+    var margin = { top: 60, right: 40, bottom: 60, left: 100 };
 
     /*
      * for scatter charts, these are square
@@ -23,19 +23,28 @@ function buildChart(fileData)
     //debugger;
 
     // get the lowest & highest revenue
-    var extent = d3
+    var extentData = d3
                    .extent(
                         fileData.allData,                                                   // data from file, array
                         d => d.value                                                // field for low/high finding
                     )
                 ;
 
-     /*
+    // get the lowest & highest year
+    var extentYear = d3
+                   .extent(
+                        fileData.allData,                                                   // data from file, array
+                        d => d.key                                                // field for low/high finding
+                    )
+                ;
+
+            /*
              * setup our X-Axis, horizontal, using the dates
              */
-            var x = d3.scaleTime()
+            var x = d3.scalePow()
+
                 // get the min & max values in array, e.g. oldest & newest dates
-                .domain(d3.extent(fileData.movieData, function (d) { return d.release_year; }))
+                .domain(extentYear)
 
                 // set values from left to right, min to max
                 .range([0, width])
@@ -46,7 +55,7 @@ function buildChart(fileData)
             var y = d3.scalePow()
 
                 // get the min & max values in array, e.g. lowest & highest
-                .domain(extent)
+                .domain(extentData)
 
                 // set values from bottom to top, min to max
                 .range([height, 0])
@@ -77,7 +86,7 @@ function buildChart(fileData)
         // positioning
         var header = svg
                         .append("g")
-                        .attr("id", "bar-header")
+                        .attr("id", "headerGroup")
                         .attr("transform", "translate(0," +(-margin.top/1.5) +")")
                         .append("text")
                     ;
@@ -99,39 +108,23 @@ function buildChart(fileData)
         ;
 
     /*
-     * the actual scatter
-     * now create rectangles set values and put on Y axis, e.g. horizontal
+     * the actual line chart
      */
-
-/*
+            /*
              * set our list of colours to use for various lines
              * using D3 list of 10 colours, any more than that
              * then use a new chart
              */
             var colours = d3.schemeCategory10;
-    /*
+
+            /*
              * first get a list of the data fields, e.g. everything
              * except the date
              */
-            var yField = "value";
-            var xField = "key";
+            var yField = "value"; // fileData.budgetData[0].name;
+            var xField = "key"; //fileData.budgetData[1].name; 
 //debugger;
-            // use the first row to get these
-            //for (var field in fileData.movieData) {
-               /* // don't add date field to our array
-                if (
-                    (field == "revenue") || (field == "budget")
-                 ) 
-                 {*/
-                    // add each other field to array
-                    //yField.push("budget");
-                    //yField.push("revenue");
-                //}
-
-                // DEBUG
-                //console.log("Data Field: " + field);
-            //}
-
+            
             /*
              * linear is normal line graph, but what if the data is units?
              * - e.g. units, 1 or 2, not 1.5, think of TVs etc in stock
@@ -139,48 +132,77 @@ function buildChart(fileData)
              * - stepBefore would be units at th end of the day
              */
             var LineType = ["linear", "monotone", "stepAfter"];
+            var xCoord = [margin.left, (width -margin.left)];
+            var yCoord = [(margin.top), (height-margin.top)];
+
+            // store lines in groups
+            var lines = svg
+                            .append("g")                
+                            .attr("id", "linesGroup")
+                        ;
+
+            // store labels in groups
+            var labels = svg
+                            .append("g")                
+                            .attr("id", "labelsGroup")
+                        ;
 //debugger;
-             /*
-             * now create new line chart based
-             * on each data field, with its own colour
-             * from both dataFields & colours arrays
-             */
+    /*
+     * now create the actual lines based
+     * on each data field, with its own colour
+     * from both dataFields & colours arrays
+     */
+            for (var counter = 0; counter < fileData.series.length; counter++)
+            {
                 //debugger;
                 // put the points of the line in place
-                var line = plotLine(xField, yField, colours[0], LineType[1], svg, fileData.budgetData, x, y);
-
+                var line = plotLine(xField, yField, colours[0], LineType[1], svg, fileData.allData, x, y);
+                
                 /*
-                  * the appearance
+                  * the lines
                   */
-                svg.append("path")
-                    .data([fileData.budgetData])
+                lines
+                    .append("path")
+                    .data([fileData.series[counter].values]) // fileData.budgetData])
                     .attr("fill", "none")
-                    .attr("stroke", colours[0])
-                    .attr("d", line);
-
-                //debugger;
-                // put the points of the line in place
-                line = plotLine(xField, yField, colours[1], LineType[1], svg, fileData.revenueData, x, y)
-
+                    .attr("stroke", colours[counter])
+                    .attr("d", line)
+                ;
+//debugger;
                 /*
-                  * the appearance
-                  */
-                svg.append("path")
-                    .data([fileData.revenueData])
-                    .attr("fill", "none")
-                    .attr("stroke", colours[1])
-                    .attr("d", line);
-            
+                 * the labels beside the lines
+                 */
+                labels
+                    //.append("g")
+                    //.attr("id", "series-labels")
+                    //.selectAll('.series-label')
+                    //.data(fileData.series[counter])
+                    //.enter()
+                    .append('text')
+                    .attr("transform", "translate(" +(width -margin.left) +"," +yCoord[counter] +")")
+                    .text(fileData.series[counter].name)
+                    //.style('dominant-baseline', 'central')
+                    //.style('font-size', '0.7em')
+                    .style('font-weight', 'bold')
+                    .style('fill', colours[counter])
+                ;
+            }
+
             // DEBUG
             console.log("plotted lines");
-
-
 
     /*
      * the X (horizontal) & Y (vertical) axis
      * - always do these last
      */
 
+        // store labels in groups
+        var axis = svg
+                        .append("g")                
+                        .attr("id", "axisGroup")
+                    ;
+
+     
         // shorter labels of columns
         function formatTicks(d) 
         {
@@ -198,13 +220,13 @@ function buildChart(fileData)
                         // normally .axisBottom for horizontal axis data points
                         .axisBottom(x)                                             // link to our X axis scale & position
                         .ticks(5)                                                       // don't need as many ticks
-                        .tickFormat(formatTicks)                                        // each label, column effectively
+                        //.tickFormat(formatTicks)                                        // each label, column effectively
                         .tickSizeInner(-height)                                          // vertical grid lines
                         .tickSizeOuter(0)                                               // hide line far right
                     ;
 
         // add to group & draw
-        var axisXDraw = svg
+        var axisXDraw = axis
                             .append("g")                                                // add new group
                             .attr("id", "axisX")                                        // give unique identifier for reference
                             .call(axisX)                                                // link to positioning & scaling
@@ -224,22 +246,24 @@ function buildChart(fileData)
                     ;
 
         // add to group & draw
-        var axisYDraw = svg
+        var axisYDraw = axis
                             .append("g")                                                // add new group
                             .attr("id", "axisY")                                        // give unique identifier for reference
                             .call(axisY)                                                // link to positioning & scaling
                             .attr("class", "grid line")                                 // re-use styling from line chart grid lines
-                            .call(addLabel, 'Revenue', -125, 275);
+                            .call(addLabel, '$ USD', -85, 225);
                         ;
 
         // add spacing between labels and the axis
         axisYDraw
             .selectAll("text")
-            .attr("dx", "-0.75em");
+            .attr("dx", "-0.75em")
+        ;
 
         axisXDraw
             .selectAll("text")
-            .attr("dy", "1.5em");
+            .attr("dy", "1.5em")
+        ;
 }
 
 /*
