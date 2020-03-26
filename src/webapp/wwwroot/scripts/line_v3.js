@@ -5,7 +5,7 @@
     * - colour (string)
     * - curve (string)
     */
-   function plotLine(xField, valueProperty, colour, curve, group, data, x, y) {
+   function plotLine(xField, yField, colour, curve, group, data, x, y) {
 
     //debugger;
     /*
@@ -13,7 +13,8 @@
      */
     var line = d3.line()
       .x(d => x(d[xField]))
-      .y(d => y(d[valueProperty]));
+      .y(d => y(d[yField]));
+
   //debugger;
     switch (curve) {
       case "linear":

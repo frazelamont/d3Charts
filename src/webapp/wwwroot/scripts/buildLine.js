@@ -4,7 +4,7 @@ function buildChart(fileData)
     //console.log(fileData);
 
     // set the margin from the SVG canvas to the chart area itself
-    var margin = { top: 60, right: 40, bottom: 60, left: 100 };
+    var margin = { top: 60, right: 70, bottom: 60, left: 90 };
 
     /*
      * for scatter charts, these are square
@@ -132,7 +132,7 @@ function buildChart(fileData)
              * - stepBefore would be units at th end of the day
              */
             var LineType = ["linear", "monotone", "stepAfter"];
-            var xCoord = [margin.left, (width -margin.left)];
+            var xCoord = [width -margin.left, (width -margin.left)];
             var yCoord = [(margin.top), (height-margin.top)];
 
             // store lines in groups
@@ -156,7 +156,27 @@ function buildChart(fileData)
             {
                 //debugger;
                 // put the points of the line in place
-                var line = plotLine(xField, yField, colours[0], LineType[1], svg, fileData.allData, x, y);
+                var line = plotLine(
+                                xField, 
+                                yField, 
+                                colours[0], 
+                                LineType[1], 
+                                svg, 
+                                fileData.allData, 
+                                x, 
+                                y
+                            );
+
+                // show circles at the points of the values
+                drawCirclePoints(
+                        xField, 
+                        yField, 
+                        lines, 
+                        10, 
+                        fileData.allData, 
+                        x, 
+                        y
+                    );
                 
                 /*
                   * the lines
@@ -173,15 +193,13 @@ function buildChart(fileData)
                  * the labels beside the lines
                  */
                 labels
-                    //.append("g")
-                    //.attr("id", "series-labels")
-                    //.selectAll('.series-label')
-                    //.data(fileData.series[counter])
-                    //.enter()
+                    .append("g")
+                    .attr("id", fileData.series[counter].name +"-label")
                     .append('text')
-                    .attr("transform", "translate(" +(width -margin.left) +"," +yCoord[counter] +")")
+                    //.attr("transform", "translate(" +xCoord[counter]+"," +yCoord[counter] +")")
+                    .attr("x", x(fileData.series[counter].values[fileData.series[counter].values.length - 1].key))  
+                    .attr("y", y(fileData.series[counter].values[fileData.series[counter].values.length - 1].value))                  
                     .text(fileData.series[counter].name)
-                    //.style('dominant-baseline', 'central')
                     //.style('font-size', '0.7em')
                     .style('font-weight', 'bold')
                     .style('fill', colours[counter])
@@ -232,7 +250,7 @@ function buildChart(fileData)
                             .call(axisX)                                                // link to positioning & scaling
                             .attr("class", "grid line")                                 // re-use styling from line chart grid lines
                             .attr("transform", "translate(0," +height +")")             // move axis to bottom (the line)
-                            .call(addLabel, "year", -250, 25)
+                            .call(addLabel, "year", (-width/2), 25)
                         ;
 
         // positioning & scaling
@@ -251,7 +269,7 @@ function buildChart(fileData)
                             .attr("id", "axisY")                                        // give unique identifier for reference
                             .call(axisY)                                                // link to positioning & scaling
                             .attr("class", "grid line")                                 // re-use styling from line chart grid lines
-                            .call(addLabel, '$ USD', -85, 225)
+                            .call(addLabel, '$ USD', (-margin.left +20) , (height/2))
                         ;
 
         // add spacing between labels and the axis
