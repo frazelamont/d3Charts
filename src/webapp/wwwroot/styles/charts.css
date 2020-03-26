@@ -38,4 +38,14 @@
                  stroke: lightgrey;
                  stroke-opacity: 0.5;
                  shape-rendering: crispEdges;
+                 stroke-width: 0.5;
+                 stroke-dasharray: 4, 2;
              }
+
+            /*
+             * change font of text areas, bigger and better
+             */
+            text 
+            {
+                font-family: 'Avenir', sans-serif;
+            }
