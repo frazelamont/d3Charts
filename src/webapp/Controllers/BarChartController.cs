@@ -34,6 +34,26 @@ namespace webapp.Controllers
                     )
                 );
 
+            tiles.Add(
+                new TileModel(
+                    "scatter chart budget & revenue",             // title 
+                    "/barChart/scatter",       // link
+
+                    // description
+                    "show data prep in scatter chart"
+                    )
+                );
+
+            tiles.Add(
+                new TileModel(
+                    "multiple line chart budget & revenue",             // title 
+                    "/barChart/line",       // link
+
+                    // description
+                    "show data prep in line chart"
+                    )
+                );
+
             ViewBag.Tiles = tiles;
 
             return View();
@@ -53,6 +73,24 @@ namespace webapp.Controllers
         /// </summary>
         /// <returns></returns>
         public IActionResult Revenue()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// scatter chart for revenue
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Scatter()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// line chart for revenue
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult Line()
         {
             return View();
         }

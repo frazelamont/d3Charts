@@ -1,0 +1,184 @@
+@{
+    ViewData["Title"] = "movies & structure";
+}
+
+<script src="~/scripts/line_v3.js"></script>
+<script src="~/scripts/buildline.js"></script>
+
+<div id="chartDiv">
+</div>
+
+<script>
+
+/*
+ * to filter the data after 2011 year
+ */
+function filterData(data)
+{
+    // both 1st & last movies have high revenue
+    return data.filter(d => {
+        return( 
+            //d.release_year < 2011 &&      // before 2011    - last movie
+            d.release_year > 2001 &&      // after 2001     - after initial movie
+            d.title
+        );
+    });
+}
+
+/*
+ * prepare data for chart, reduce fields and
+ * provide a key
+ *
+ * http://devdocs.io
+ */
+function prepareBarChartData(data) 
+{
+     // group the data by title
+    var revenueMap = d3.nest()
+
+                        // grouped by is the key, can have multiple
+                        .key(function(d){
+                                    return d.release_year; 
+                                })
+
+                        // collate the values of the revenue here to one big number
+                        // more useful when grouped by say genre
+                        .rollup(function(leaves){
+                                    return d3.sum(leaves, function(d){
+                                        return d.revenue;
+                                    }) //;
+                                })
+
+                        // the data to use
+                        .entries(data)
+                    ;
+
+    // group the data by title
+    var budgetMap = d3.nest()
+
+                        // grouped by is the key, can have multiple
+                        .key(function(d){
+                                    return d.release_year; 
+                                })
+
+                        // collate the values of the revenue here to one big number
+                        // more useful when grouped by say genre
+                        .rollup(function(leaves){
+                                    return d3.sum(leaves, function(d){
+                                        return d.budget;
+                                    }) //;
+                                })
+
+                        // the data to use
+                        .entries(data)
+                    ;
+//debugger;
+    // group the data by title
+    var datesMap = d3.nest()
+
+                        // grouped by is the key, can have multiple
+                        .key(function(d){
+                                    return d.release_year; 
+                                })
+
+                        // collate the values of the revenue here to one big number
+                        // more useful when grouped by say genre
+                        .rollup(function(leaves){
+                                    return d3.sum(leaves, function(d){
+                                        return d.release_year;
+                                    }) //;
+                                })
+
+                        // the data to use
+                        .entries(data)
+                    ;
+
+    //debugger;
+
+    // Convert rolled up maps to to arrays.
+    var revenue = Array.from(revenueMap).sort((a, b) => a[0] - b[0]);
+    var budget = Array.from(budgetMap).sort((a, b) => a[0] - b[0]);
+    var dates = Array.from(datesMap);
+
+    // DEBUG
+    console.log("revenue", revenue);
+    console.log("budget", budget);
+
+    // While we're at it, get the maximum y value for the y scale and axis.
+    var yValues = [
+        ...Array.from(revenueMap.values()),
+        ...Array.from(budgetMap.values()),
+    ];
+    var yMax = d3.max(yValues);
+
+    // DEBUG
+    console.log("yValues", yValues);
+    console.log("yMax", yMax);
+
+    // Produce final data object.
+  var lineData = {
+    revenueData: revenue,
+    budgetData: budget,
+    dates: dates,
+    yMax: yMax,
+    movieData : data,
+    allData : yValues
+  };
+
+    // DEBUG
+    console.log("lineData", lineData);
+
+  return lineData;
+
+
+    //debugger;  // uncomment this line to effectively pause at this point (useful js debug line)
+}
+
+/*
+ * convert fields in csv to js objects
+ */
+function csvConvert(d)
+{
+     return {
+                id: +d.id,                          // + means convert to number
+                title: d.title,                     // default, keep as string
+                release_year: +d.release_year,      // year as number (not date in csv)
+                genre: d.genre,
+                runtime: +d.runtime,                // minutes as number
+                budget: +d.budget,
+                revenue: +d.revenue
+            };
+}
+
+/*
+ * once data is loaded, run a few tasks, like c++ main()
+ */
+function dataLoaded(loadedData)
+{    
+    console.log("pre filter: ", loadedData);
+    var cleanData = filterData(loadedData);
+    console.log("filtered: ", cleanData);
+
+    // 
+    var barChartData = prepareBarChartData(cleanData);
+
+   //debugger; 
+
+    buildChart(
+        barChartData
+    );
+}
+
+/* CSV file */
+        d3.csv("../data/harry_potter.csv", csvConvert)
+          .then(result => {
+              dataLoaded(result)     
+          })
+        ;
+
+</script>
+
+<div>
+    generate scatter chart using revenue fields, previous data from data prep<br />
+    - 
+</div>
