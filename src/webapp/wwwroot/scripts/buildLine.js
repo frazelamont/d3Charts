@@ -75,7 +75,7 @@ function buildChart(fileData)
             
                 .append("g")                                                      // svg group
                 .attr("id", "chartGroup")                                         // id
-                .attr("transform", "translate(" +margin.left +"," +margin.top +")");   // indent chart area
+                .attr("transform", "translate(" +margin.left +"," +margin.top +")")   // indent chart area
             ;
 
     /*
@@ -232,7 +232,7 @@ function buildChart(fileData)
                             .call(axisX)                                                // link to positioning & scaling
                             .attr("class", "grid line")                                 // re-use styling from line chart grid lines
                             .attr("transform", "translate(0," +height +")")             // move axis to bottom (the line)
-                            .call(addLabel, 'year', -250, 25);
+                            .call(addLabel, "year", -250, 25)
                         ;
 
         // positioning & scaling
@@ -251,7 +251,7 @@ function buildChart(fileData)
                             .attr("id", "axisY")                                        // give unique identifier for reference
                             .call(axisY)                                                // link to positioning & scaling
                             .attr("class", "grid line")                                 // re-use styling from line chart grid lines
-                            .call(addLabel, '$ USD', -85, 225);
+                            .call(addLabel, '$ USD', -85, 225)
                         ;
 
         // add spacing between labels and the axis
